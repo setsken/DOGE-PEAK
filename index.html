@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOGE PEAK - Восхождение начинается!</title>
+    <meta name="description" content="DOGE PEAK - твой билет на вершину криптомира. Хватит смотреть снизу вверх — пора покорять!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Fallback для иконок если Lucide не загрузился -->
+    <style>
+        /* Fallback иконки с CSS */
+        .icon-fallback {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: #facc15;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .icon-fallback::before {
+            content: "★";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0a0a0a;
+            font-weight: bold;
+        }
+        
+        /* Проверяем загрузились ли иконки Lucide */
+        [data-lucide]:empty::before {
+            content: "⚡";
+            color: #facc15;
+            font-size: 1.2em;
+        }
+        
+        [data-lucide="rocket"]:empty::before { content: "🚀"; }
+        [data-lucide="flag"]:empty::before { content: "🏁"; }
+        [data-lucide="trending-up"]:empty::before { content: "📈"; }
+        [data-lucide="mountain-snow"]:empty::before { content: "⛰️"; }
+        [data-lucide="award"]:empty::before { content: "🏆"; }
+        [data-lucide="shield-check"]:empty::before { content: "🛡️"; }
+        [data-lucide="users"]:empty::before { content: "👥"; }
+        [data-lucide="zap"]:empty::before { content: "⚡"; }
+        [data-lucide="target"]:empty::before { content: "🎯"; }
+        [data-lucide="wallet"]:empty::before { content: "💰"; }
+        [data-lucide="bitcoin"]:empty::before { content: "₿"; }
+        [data-lucide="globe"]:empty::before { content: "🌐"; }
+        [data-lucide="mouse-pointer-square"]:empty::before { content: "👆"; }
+        [data-lucide="shopping-cart"]:empty::before { content: "🛒"; }
+        [data-lucide="send"]:empty::before { content: "📤"; }
+        [data-lucide="twitter"]:empty::before { content: "🐦"; }
+        [data-lucide="discord"]:empty::before { content: "💬"; }
+        [data-lucide="menu"]:empty::before { content: "☰"; }
+        [data-lucide="x"]:empty::before { content: "✕"; }
+        [data-lucide="chevron-down"]:empty::before { content: "⬇️"; }
+        [data-lucide="info"]:empty::before { content: "ℹ️"; }
+        [data-lucide="flag-triangle-right"]:empty::before { content: "🚩"; }
+        [data-lucide="bar-chart-3"]:empty::before { content: "📊"; }
+        [data-lucide="mountain"]:empty::before { content: "🏔️"; }
+        [data-lucide="crown"]:empty::before { content: "👑"; }
+        [data-lucide="swords"]:empty::before { content: "⚔️"; }
+        [data-lucide="coins"]:empty::before { content: "🪙"; }
+        [data-lucide="receipt"]:empty::before { content: "🧾"; }
+        [data-lucide="flame"]:empty::before { content: "🔥"; }
+    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="logo.png">
+</head>
+<body class="bg-brand-dark text-gray-200 font-sans">
+
+    <header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <img src="logo.png" alt="DOGE PEAK Logo" class="h-10 w-10">
+                <span class="text-xl font-bold tracking-wider text-white">DOGE PEAK</span>
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="nav-link">Почему мы?</a>
+                <a href="#roadmap" class="nav-link">Дорожная карта</a>
+                <a href="#tokenomics" class="nav-link">Токеномика</a>
+                <a href="#how-to-buy" class="nav-link">Как купить</a>
+            </div>
+            <a href="https://pump.fun/" target="_blank" class="btn btn-primary hidden md:flex">
+                Купить на pump.fun
+            </a>
+            <button id="mobile-menu-button" class="md:hidden text-white">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-dark-blurry">
+            <a href="#about" class="block py-3 px-6 text-center nav-link">Почему мы?</a>
+            <a href="#roadmap" class="block py-3 px-6 text-center nav-link">Дорожная карта</a>
+            <a href="#tokenomics" class="block py-3 px-6 text-center nav-link">Токеномика</a>
+            <a href="#how-to-buy" class="block py-3 px-6 text-center nav-link">Как купить</a>
+            <div class="p-4">
+                 <a href="https://pump.fun/" target="_blank" class="btn btn-primary w-full">
+                    Купить на pump.fun
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://r2.flowith.net/files/o/1755907622753-doge_peak_website_banner_index_1@1024x1024.png');"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
+            <!-- Animated background elements -->
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-yellow opacity-10 rounded-full filter blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-brand-orange opacity-10 rounded-full filter blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-purple opacity-10 rounded-full filter blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+            
+            <div class="relative z-10 container mx-auto px-6 animate-section">
+                <div class="hero-content">
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-widest text-white mb-6 hero-title">
+                        DOGE PEAK:<br>
+                        <span class="gradient-text">ВОСХОЖДЕНИЕ НАЧИНАЕТСЯ!</span>
+                    </h1>
+                    <p class="text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+                        Твой билет на вершину криптомира. Хватит смотреть снизу вверх — пора покорять!
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <a href="https://pump.fun/" target="_blank" class="btn btn-primary btn-lg group">
+                            <i data-lucide="rocket" class="w-6 h-6 mr-2 group-hover:animate-bounce"></i>
+                            Покорить вершину на pump.fun
+                        </a>
+                        <a href="#about" class="btn btn-secondary btn-lg">
+                            <i data-lucide="info" class="w-6 h-6 mr-2"></i>
+                            Узнать больше
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Статистика -->
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <div class="stat-card">
+                        <div class="stat-number">100B</div>
+                        <div class="stat-label">Общее предложение</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0%</div>
+                        <div class="stat-label">Налоги</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Честный запуск</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scroll indicator -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <i data-lucide="chevron-down" class="w-8 h-8 text-brand-yellow"></i>
+            </div>
+        </section>
+
+        <!-- Новая секция с преимуществами -->
+        <section class="py-20 md:py-32 bg-gradient-to-br from-brand-dark via-brand-dark-secondary to-brand-dark relative overflow-hidden">
+            <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-blue opacity-5 rounded-full filter blur-3xl"></div>
+            <div class="container mx-auto px-6 animate-section relative z-10">
+                <div class="max-w-4xl mx-auto text-center mb-16">
+                    <h2 class="section-title">НАШИ ПРЕИМУЩЕСТВА</h2>
+                    <p class="section-subtitle">Что делает DOGE PEAK особенным среди тысяч других мем-монет</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <div class="advantage-card floating">
+                        <div class="advantage-icon">
+                            <i data-lucide="shield-check" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="advantage-title">Безопасность</h3>
+                        <p class="advantage-text">Ликвидность будет сожжена, что исключает возможность "rug pull". Ваши инвестиции защищены.</p>
+                    </div>
+                    
+                    <div class="advantage-card floating">
+                        <div class="advantage-icon">
+                            <i data-lucide="users" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="advantage-title">Сообщество</h3>
+                        <p class="advantage-text">Активное и растущее сообщество альпинистов, готовых идти к вершине вместе.</p>
+                    </div>
+                    
+                    <div class="advantage-card floating">
+                        <div class="advantage-icon">
+                            <i data-lucide="trending-up" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="advantage-title">Потенциал роста</h3>
+                        <p class="advantage-text">Четкая дорожная карта и планы листингов на крупных биржах обеспечивают потенциал роста.</p>
+                    </div>
+                    
+                    <div class="advantage-card floating">
+                        <div class="advantage-icon">
+                            <i data-lucide="zap" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="advantage-title">Быстрые транзакции</h3>
+                        <p class="advantage-text">Работаем на блокчейне Solana - быстрые и дешевые транзакции.</p>
+                    </div>
+                    
+                    <div class="advantage-card floating">
+                        <div class="advantage-icon">
+                            <i data-lucide="target" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="advantage-title">Четкая цель</h3>
+                        <p class="advantage-text">Не просто мем-монета, а проект с амбициозными планами и четкими целями.</p>
+                    </div>
+                    
+                    <div class="advantage-card floating">
+                        <div class="advantage-icon">
+                            <i data-lucide="rocket" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="advantage-title">Инновации</h3>
+                        <p class="advantage-text">Постоянное развитие проекта и внедрение новых функций для держателей.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 md:py-32 bg-brand-dark relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-dark via-transparent to-brand-dark-secondary opacity-50"></div>
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-brand-yellow opacity-5 rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-orange opacity-5 rounded-full filter blur-3xl"></div>
+            <div class="container mx-auto px-6 animate-section relative z-10">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="section-title">ПОЧЕМУ DOGE PEAK? ЭТО ЭКСПЕДИЦИЯ!</h2>
+                    <p class="section-subtitle">Мы не просто очередная монета. Мы — команда альпинистов, идущих к вершине. Каждый держатель $PEAK — это участник захватывающей экспедиции, где мы вместе пишем историю успеха.</p>
+                </div>
+                <div class="mt-16 grid md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
+                    <div class="feature-card group">
+                        <div class="feature-card-icon">
+                            <i data-lucide="flag" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="feature-card-title">Базовый лагерь: Старт</h3>
+                        <p class="feature-card-text">Наше восхождение начинается на <strong class="text-white">pump.fun</strong>. Это наш базовый лагерь — точка, где формируется команда и каждый может присоединиться к экспедиции на равных и честных условиях.</p>
+                    </div>
+                    <div class="feature-card group">
+                        <div class="feature-card-icon">
+                            <i data-lucide="trending-up" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="feature-card-title">Акклиматизация: Рост</h3>
+                        <p class="feature-card-text">Чтобы идти выше, нужна выносливость. Мы растем, укрепляем сообщество, наши мемы согревают в пути. Каждый новый участник — это узел в нашей <strong class="text-white">альпинистской связке</strong>.</p>
+                    </div>
+                    <div class="feature-card group">
+                        <div class="feature-card-icon">
+                            <i data-lucide="mountain-snow" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="feature-card-title">Штурм вершины: Листинги</h3>
+                        <p class="feature-card-text">Собравшись с силами, мы начинаем штурм. Листинги на <strong class="text-white">Coingecko, CMC и CEX</strong> — это наши маршруты к вершине, делающие нас заметными для всего мира.</p>
+                    </div>
+                    <div class="feature-card group">
+                        <div class="feature-card-icon">
+                            <i data-lucide="award" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="feature-card-title">Пик: Успех</h3>
+                        <p class="feature-card-text">Вершина — это не конец пути, а новая точка обзора. Достигнув пика, мы становимся <strong class="text-white">легендой</strong>. Это наша общая победа, открывающая новые горизонты.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="py-20 md:py-32 bg-gray-900/50 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-transparent via-brand-dark-secondary/30 to-transparent"></div>
+            <div class="absolute top-1/4 left-1/3 w-72 h-72 bg-brand-blue opacity-5 rounded-full filter blur-3xl"></div>
+            <div class="container mx-auto px-6 animate-section relative z-10">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="section-title">ДОРОЖНАЯ КАРТА: ЭТАПЫ ВОСХОЖДЕНИЯ</h2>
+                    <p class="section-subtitle">Четкий план, который приведет нас к вершине. Каждый этап — это выверенный шаг нашей экспедиции.</p>
+                </div>
+                <div class="roadmap-infographic">
+                    <div class="roadmap-phase-container floating">
+                        <div class="roadmap-phase-content">
+                            <h3 class="roadmap-phase-title">Фаза 1: Базовый лагерь</h3>
+                            <ul class="roadmap-phase-list">
+                                <li>Запуск на pump.fun и формирование основного сообщества.</li>
+                                <li>Запуск V1 сайта, начало маркетинговой кампании.</li>
+                            </ul>
+                        </div>
+                        <div class="roadmap-phase-icon bg-green-500"><i data-lucide="flag-triangle-right"></i></div>
+                    </div>
+                    <div class="roadmap-phase-container floating">
+                        <div class="roadmap-phase-content">
+                            <h3 class="roadmap-phase-title">Фаза 2: Акклиматизация и подъем</h3>
+                            <ul class="roadmap-phase-list">
+                                <li>Развитие сайта до V2 (интерактивные элементы).</li>
+                                <li>Листинг на Coingecko и CoinMarketCap.</li>
+                                <li>Маркетинговая кампания и первый листинг на CEX.</li>
+                            </ul>
+                        </div>
+                        <div class="roadmap-phase-icon bg-yellow-400"><i data-lucide="bar-chart-3"></i></div>
+                    </div>
+                    <div class="roadmap-phase-container floating">
+                        <div class="roadmap-phase-content">
+                            <h3 class="roadmap-phase-title">Фаза 3: Штурм вершины</h3>
+                            <ul class="roadmap-phase-list">
+                                <li>Листинги на крупных централизованных биржах (CEX).</li>
+                                <li>Партнерства с крупными инфлюенсерами.</li>
+                                <li>Ежеквартальное сжигание токенов DOGE PEAK.</li>
+                                <li>Стейкинг монет DOGE PEAK.</li>
+                            </ul>
+                        </div>
+                        <div class="roadmap-phase-icon bg-orange-500"><i data-lucide="mountain"></i></div>
+                    </div>
+                    <div class="roadmap-phase-container floating">
+                        <div class="roadmap-phase-content">
+                            <h3 class="roadmap-phase-title">Фаза 4: На Пике</h3>
+                            <ul class="roadmap-phase-list">
+                                <li>Достижение статуса топ-мем-монеты.</li>
+                                <li>Разработка дополнительных утилити для холдеров.</li>
+                                <li>Переход к управлению сообществом через DAO.</li>
+                            </ul>
+                        </div>
+                        <div class="roadmap-phase-icon bg-purple-500"><i data-lucide="crown"></i></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tokenomics" class="py-20 md:py-32 bg-brand-dark relative overflow-hidden">
+             <div class="absolute inset-0 bg-gradient-to-tl from-brand-dark via-transparent to-brand-dark-secondary opacity-60"></div>
+             <div class="absolute top-1/3 right-1/4 w-80 h-80 bg-brand-purple opacity-5 rounded-full filter blur-3xl"></div>
+             <div class="container mx-auto px-6 animate-section relative z-10">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="section-title">ТОКЕНОМИКА: ПРОСТАЯ И ЧЕСТНАЯ</h2>
+                    <p class="section-subtitle">Мы верим в прозрачность и равные возможности. Никаких сложных схем и скрытых условий.</p>
+                </div>
+                <div class="mt-16 max-w-5xl mx-auto">
+                    <div class="overflow-x-auto">
+                        <table class="w-full tokenomics-table">
+                            <thead>
+                                <tr>
+                                    <th>Параметр</th>
+                                    <th>Значение</th>
+                                    <th>Описание</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i data-lucide="swords" class="table-icon"></i>Честный запуск</td>
+                                    <td>100%</td>
+                                    <td>Никаких предварительных продаж и токенов для команды. Все начинают с равных условий на pump.fun.</td>
+                                </tr>
+                                <tr>
+                                    <td><i data-lucide="coins" class="table-icon"></i>Общее предложение</td>
+                                    <td>100,000,000,000 $PEAK</td>
+                                    <td>Фиксированное количество токенов. Дефицит — наш друг.</td>
+                                </tr>
+                                 <tr>
+                                    <td><i data-lucide="receipt" class="table-icon"></i>Налоги на транзакции</td>
+                                    <td>0%</td>
+                                    <td>Покупай и продавай без комиссий. Все твои средства — твои.</td>
+                                </tr>
+                                <tr>
+                                    <td><i data-lucide="flame" class="table-icon"></i>Ликвидность</td>
+                                    <td>Автоматически сжигается</td>
+                                    <td>Как только мы достигнем цели на pump.fun, ликвидность будет создана на Raydium и сожжена. Это гарантия безопасности от "rug pull".</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-to-buy" class="py-20 md:py-32 bg-gray-900/50 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-tr from-brand-dark via-transparent to-brand-dark-secondary opacity-40"></div>
+            <div class="absolute bottom-1/4 left-1/4 w-64 h-64 bg-brand-yellow opacity-5 rounded-full filter blur-3xl"></div>
+            <div class="absolute top-1/3 right-1/3 w-96 h-96 bg-brand-purple opacity-5 rounded-full filter blur-3xl"></div>
+            <div class="container mx-auto px-6 animate-section relative z-10">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="section-title">КАК КУПИТЬ: СТАНЬ ЧАСТЬЮ ЭКСПЕДИЦИИ!</h2>
+                    <p class="section-subtitle">Присоединиться к нашему восхождению проще, чем кажется. Всего 4 шага отделяют тебя от вершины!</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+                    <div class="buy-step floating">
+                        <div class="buy-step-number">1</div>
+                        <i data-lucide="wallet" class="buy-step-icon"></i>
+                        <h3 class="buy-step-title">Скачайте кошелек</h3>
+                        <p class="buy-step-text">Установите кошелек, поддерживающий Solana, например <strong>Phantom</strong> или <strong>Solflare</strong>.</p>
+                    </div>
+                     <div class="buy-step floating">
+                        <div class="buy-step-number">2</div>
+                        <i data-lucide="coins" class="buy-step-icon"></i>
+                        <h3 class="buy-step-title">Купите SOL</h3>
+                        <p class="buy-step-text">Приобретите монеты Solana (SOL) на любой крупной бирже и отправьте на ваш кошелек.</p>
+                    </div>
+                     <div class="buy-step floating">
+                        <div class="buy-step-number">3</div>
+                        <i data-lucide="globe" class="buy-step-icon"></i>
+                        <h3 class="buy-step-title">Перейдите на pump.fun</h3>
+                        <p class="buy-step-text">Откройте страницу DOGE PEAK на <a href="https://pump.fun/" target="_blank" class="text-brand-yellow hover:underline">pump.fun</a>.</p>
+                    </div>
+                     <div class="buy-step floating">
+                        <div class="buy-step-number">4</div>
+                        <i data-lucide="rocket" class="buy-step-icon"></i>
+                        <h3 class="buy-step-title">Подключитесь и купите!</h3>
+                        <p class="buy-step-text">Подключите кошелек, введите сумму SOL, нажмите <strong>"Buy"</strong> и подтвердите.</p>
+                    </div>
+                </div>
+                <div class="mt-16 text-center">
+                    <p class="text-xl mb-6 text-gray-300">Поздравляем! Ты в команде! Теперь держись крепче — мы начинаем восхождение!</p>
+                     <a href="https://pump.fun/" target="_blank" class="btn btn-primary btn-lg">
+                        <i data-lucide="shopping-cart" class="w-6 h-6 mr-2"></i>
+                        Купить $PEAK сейчас
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-black relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-brand-dark to-transparent opacity-80"></div>
+        <div class="absolute top-0 left-1/4 w-64 h-64 bg-brand-yellow opacity-5 rounded-full filter blur-3xl"></div>
+        <div class="container mx-auto px-6 py-16 text-center text-gray-400 relative z-10">
+            <div class="flex justify-center items-center space-x-3 mb-8">
+                <img src="logo.png" alt="DOGE PEAK Logo" class="h-16 w-16 animate-pulse">
+                <span class="text-3xl font-bold text-white">DOGE PEAK</span>
+            </div>
+            <p class="mb-8 text-lg">Присоединяйтесь к нашему восхождению в социальных сетях!</p>
+            <div class="flex justify-center space-x-8 mb-12">
+                <a href="https://t.me/DOGE_PEAK" target="_blank" class="social-link group">
+                    <i data-lucide="send" class="w-8 h-8 group-hover:scale-125 transition-transform"></i>
+                </a>
+                <a href="https://x.com/DOGE_PEAK" target="_blank" class="social-link group">
+                    <i data-lucide="twitter" class="w-8 h-8 group-hover:scale-125 transition-transform"></i>
+                </a>
+                <a href="#" class="social-link group">
+                    <i data-lucide="discord" class="w-8 h-8 group-hover:scale-125 transition-transform"></i>
+                </a>
+            </div>
+            
+            <!-- Quick links -->
+            <div class="flex flex-wrap justify-center gap-8 mb-8 text-sm">
+                <a href="#about" class="hover:text-brand-yellow transition-colors">Почему мы?</a>
+                <a href="#roadmap" class="hover:text-brand-yellow transition-colors">Дорожная карта</a>
+                <a href="#tokenomics" class="hover:text-brand-yellow transition-colors">Токеномика</a>
+                <a href="#how-to-buy" class="hover:text-brand-yellow transition-colors">Как купить</a>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8">
+                <p class="text-sm text-gray-500">&copy; 2025 DOGE PEAK. Все права защищены. Помните, что криптовалюты являются высоковолатильными активами. Инвестируйте с умом.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
