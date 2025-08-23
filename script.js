@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCounterAnimations();
     initMouseTracker();
     initPhaseAnimations();
+    initLanguageSwitcher(); // Добавляем переключатель языков
 });
 
 function initIcons() {
@@ -209,4 +210,41 @@ function initPhaseAnimations() {
             margin: "-50px 0px"
         });
     });
+}
+
+// Language Switching Functionality
+function initLanguageSwitcher() {
+    const langButtons = document.querySelectorAll('.lang-btn');
+    let currentLang = 'en'; // Default language is English
+    
+    // Set default language on page load
+    switchLanguage(currentLang);
+    
+    langButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.dataset.lang;
+            if (lang !== currentLang) {
+                currentLang = lang;
+                switchLanguage(lang);
+                updateActiveButton(lang);
+            }
+        });
+    });
+    
+    function switchLanguage(lang) {
+        const elements = document.querySelectorAll('[data-en][data-ru]');
+        
+        elements.forEach(element => {
+            const text = element.dataset[lang];
+            if (text) {
+                element.innerHTML = text;
+            }
+        });
+    }
+    
+    function updateActiveButton(lang) {
+        langButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === lang);
+        });
+    }
 }
