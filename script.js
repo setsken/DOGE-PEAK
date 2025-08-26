@@ -19,6 +19,9 @@ function initIcons() {
         if (typeof lucide !== 'undefined' && lucide.createIcons) {
             lucide.createIcons();
             console.log('Lucide icons загружены успешно');
+            
+            // Принудительно делаем иконки ракеты белыми в кнопках
+            applyWhiteRocketIcons();
         } else {
             console.warn('Lucide icons не загрузились, используем fallback');
             // Fallback иконки уже в CSS
@@ -32,11 +35,37 @@ function initIcons() {
         try {
             if (typeof lucide !== 'undefined' && lucide.createIcons) {
                 lucide.createIcons();
+                applyWhiteRocketIcons();
             }
         } catch (e) {
             console.log('Повторная попытка загрузки иконок не удалась, используем emoji fallback');
         }
     }, 1000);
+}
+
+function applyWhiteRocketIcons() {
+    // Находим все иконки ракеты в кнопках
+    const rocketIcons = document.querySelectorAll('.btn-primary [data-lucide="rocket"]');
+    rocketIcons.forEach(icon => {
+        const svg = icon.querySelector('svg');
+        if (svg) {
+            svg.style.color = 'white';
+            svg.style.fill = 'none';  // Убираем заливку
+            svg.style.stroke = 'white';
+            svg.style.strokeWidth = '2';
+            
+            // Также применяем стили ко всем path элементам внутри SVG
+            const paths = svg.querySelectorAll('path');
+            paths.forEach(path => {
+                path.style.fill = 'none';  // Убираем заливку у path
+                path.style.stroke = 'white';
+                path.style.strokeWidth = '2';
+            });
+        }
+        
+        // Также применяем стили к самому элементу
+        icon.style.color = 'white';
+    });
 }
 
 function initHeaderScroll() {
@@ -237,7 +266,23 @@ function initLanguageSwitcher() {
         elements.forEach(element => {
             const text = element.dataset[lang];
             if (text) {
-                element.innerHTML = text;
+                // Если это span с текстом или другой элемент без иконок
+                if (element.tagName === 'SPAN' || !text.includes('<i ') && !text.includes('<svg')) {
+                    element.textContent = text;
+                } else {
+                    // Для элементов с HTML содержимым (иконки)
+                    element.innerHTML = text;
+                    // Повторно инициализируем иконки после изменения innerHTML
+                    setTimeout(() => {
+                        try {
+                            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                                lucide.createIcons();
+                            }
+                        } catch (e) {
+                            console.log('Ошибка при переинициализации иконок:', e);
+                        }
+                    }, 10);
+                }
             }
         });
     }

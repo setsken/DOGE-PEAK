@@ -40,6 +40,21 @@
         }
         
         [data-lucide="rocket"]:empty::before { content: "🚀"; }
+        
+        /* Стили для белых иконок в кнопках */
+        .btn-primary [data-lucide="rocket"] {
+            color: white !important;
+            fill: none !important;
+            stroke: white !important;
+            stroke-width: 2 !important;
+        }
+        
+        .btn-primary [data-lucide="rocket"] svg {
+            color: white !important;
+            fill: none !important;
+            stroke: white !important;
+            stroke-width: 2 !important;
+        }
         [data-lucide="flag"]:empty::before { content: "🏁"; }
         [data-lucide="trending-up"]:empty::before { content: "📈"; }
         [data-lucide="mountain-snow"]:empty::before { content: "⛰️"; }
@@ -81,10 +96,11 @@
                 <span class="text-xl font-bold tracking-wider text-white">DOGE PEAK</span>
             </a>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#about" class="nav-link" data-en="Why us?" data-ru="Почему мы?">Почему мы?</a>
-                <a href="#roadmap" class="nav-link" data-en="Roadmap" data-ru="Дорожная карта">Дорожная карта</a>
-                <a href="#tokenomics" class="nav-link" data-en="Tokenomics" data-ru="Токеномика">Токеномика</a>
-                <a href="#how-to-buy" class="nav-link" data-en="How to Buy" data-ru="Как купить">Как купить</a>
+                <a href="#nft" class="nav-link" data-en="NFT Collection" data-ru="NFT Коллекция">NFT Collection</a>
+                <a href="#about" class="nav-link" data-en="Why us?" data-ru="Почему мы?">Why us?</a>
+                <a href="#roadmap" class="nav-link" data-en="Roadmap" data-ru="Дорожная карта">Roadmap</a>
+                <a href="#tokenomics" class="nav-link" data-en="Tokenomics" data-ru="Токеномика">Tokenomics</a>
+                <a href="#how-to-buy" class="nav-link" data-en="How to Buy" data-ru="Как купить">How to Buy</a>
                 <!-- Language switcher -->
                 <div class="language-switcher flex items-center space-x-2 ml-4">
                     <button class="lang-btn active" data-lang="en" title="English">🇺🇸</button>
@@ -100,10 +116,12 @@
             </button>
         </nav>
         <div id="mobile-menu" class="hidden md:hidden bg-brand-dark-blurry">
-            <a href="#about" class="block py-3 px-6 text-center nav-link" data-en="Why us?" data-ru="Почему мы?">Почему мы?</a>
-            <a href="#roadmap" class="block py-3 px-6 text-center nav-link" data-en="Roadmap" data-ru="Дорожная карта">Дорожная карта</a>
-            <a href="#tokenomics" class="block py-3 px-6 text-center nav-link" data-en="Tokenomics" data-ru="Токеномика">Токеномика</a>
-            <a href="#how-to-buy" class="block py-3 px-6 text-center nav-link" data-en="How to Buy" data-ru="Как купить">Как купить</a>
+            <a href="#nft" class="block py-3 px-6 text-center nav-link" data-en="NFT Collection" data-ru="NFT Коллекция">NFT Collection</a>
+            <a href="#about" class="block py-3 px-6 text-center nav-link" data-en="Why us?" data-ru="Почему мы?">Why us?</a>
+            <a href="#roadmap" class="block py-3 px-6 text-center nav-link" data-en="Roadmap" data-ru="Дорожная карта">Roadmap</a>
+            <a href="#tokenomics" class="block py-3 px-6 text-center nav-link" data-en="Tokenomics" data-ru="Токеномика">Tokenomics</a>
+            <a href="#how-to-buy" class="block py-3 px-6 text-center nav-link" data-en="How to Buy" data-ru="Как купить">How to Buy</a>
+            <a href="profile-demo.html" class="block py-3 px-6 text-center nav-link">👤 <span data-en="Profile Demo" data-ru="Демо профиля">Profile Demo</span></a>
             <!-- Mobile Language switcher -->
             <div class="flex justify-center space-x-4 py-3">
                 <button class="lang-btn active" data-lang="en" title="English">🇺🇸 English</button>
@@ -140,17 +158,13 @@
                         Your ticket to the peak of the crypto world. Stop looking up from below — it's time to conquer!
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" class="btn btn-primary btn-lg group"
-                           data-en="<i data-lucide='rocket' class='w-6 h-6 mr-2 group-hover:animate-bounce'></i>Conquer the Peak on pump.fun"
-                           data-ru="<i data-lucide='rocket' class='w-6 h-6 mr-2 group-hover:animate-bounce'></i>Покорить вершину на pump.fun">
+                        <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" class="btn btn-primary btn-lg group">
                             <i data-lucide="rocket" class="w-6 h-6 mr-2 group-hover:animate-bounce"></i>
-                            Conquer the Peak on pump.fun
+                            <span data-en="Conquer the Peak on pump.fun" data-ru="Покорить вершину на pump.fun">Conquer the Peak on pump.fun</span>
                         </a>
-                        <a href="#about" class="btn btn-secondary btn-lg"
-                           data-en="<i data-lucide='info' class='w-6 h-6 mr-2'></i>Learn More"
-                           data-ru="<i data-lucide='info' class='w-6 h-6 mr-2'></i>Узнать больше">
+                        <a href="#about" class="btn btn-secondary btn-lg">
                             <i data-lucide="info" class="w-6 h-6 mr-2"></i>
-                            Learn More
+                            <span data-en="Learn More" data-ru="Узнать больше">Learn More</span>
                         </a>
                     </div>
                 </div>
@@ -180,59 +194,84 @@
 
         <!-- FOMO Section -->
         <section class="py-16 bg-gradient-to-r from-red-900/20 via-orange-900/20 to-yellow-900/20 relative overflow-hidden">
-            <div class="absolute inset-0 bg-black/50"></div>
+            <div class="absolute inset-0 bg-repeat" style="background-image: url('fon.png'); background-size: auto;"></div>
+            <div class="absolute inset-0 bg-black/60"></div>
             <div class="container mx-auto px-6 text-center relative z-10">
                 <div class="max-w-4xl mx-auto">
-                    <h2 class="text-3xl md:text-5xl font-black text-white mb-6 animate-pulse" 
-                        data-en="⚡ DON'T MISS THE EARLY BIRD OPPORTUNITY! ⚡" 
-                        data-ru="⚡ НЕ УПУСТИТЕ ВОЗМОЖНОСТЬ РАННЕГО ИНВЕСТОРА! ⚡">
-                        ⚡ DON'T MISS THE EARLY BIRD OPPORTUNITY! ⚡
+                    <h2 class="text-3xl md:text-5xl font-black text-white mb-6 animate-pulse flex items-center justify-center gap-4" 
+                        data-en="DON'T MISS THE EARLY BIRD OPPORTUNITY!" 
+                        data-ru="НЕ УПУСТИТЕ ВОЗМОЖНОСТЬ РАННЕГО ИНВЕСТОРА!">
+                        <span class="svg-icon svg-icon-large lightning-icon"></span>
+                        DON'T MISS THE EARLY BIRD OPPORTUNITY!
+                        <span class="svg-icon svg-icon-large lightning-icon"></span>
                     </h2>
                     
                     <div class="grid md:grid-cols-3 gap-8 mb-12">
-                        <div class="bg-gradient-to-br from-green-500/20 to-emerald-600/20 rounded-lg p-6 border border-green-500/30">
-                            <h3 class="text-2xl font-bold text-green-400 mb-2">📈 Early Stage</h3>
+                        <div class="fomo-card green bg-gradient-to-br from-green-500/20 to-emerald-600/20 rounded-lg p-6 border border-green-500/30">
+                            <h3 class="text-2xl font-bold text-green-400 mb-2 flex items-center gap-2">
+                                <span class="svg-icon trending-up-icon"></span>
+                                Early Stage
+                            </h3>
                             <p class="text-green-200" data-en="Only 4.0% bonding curve progress - massive growth potential!" data-ru="Только 4.0% прогресса кривой связывания - огромный потенциал роста!">
                                 Only 4.0% bonding curve progress - massive growth potential!
                             </p>
                         </div>
                         
-                        <div class="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 rounded-lg p-6 border border-blue-500/30">
-                            <h3 class="text-2xl font-bold text-blue-400 mb-2">🔥 Low Market Cap</h3>
+                        <div class="fomo-card blue bg-gradient-to-br from-blue-500/20 to-cyan-600/20 rounded-lg p-6 border border-blue-500/30">
+                            <h3 class="text-2xl font-bold text-blue-400 mb-2 flex items-center gap-2">
+                                <span class="svg-icon fire-icon"></span>
+                                Low Market Cap
+                            </h3>
                             <p class="text-blue-200" data-en="$5.9K MC - perfect entry point before the moon!" data-ru="$5.9К рыночная капитализация - идеальная точка входа перед луной!">
                                 $5.9K MC - perfect entry point before the moon!
                             </p>
                         </div>
                         
-                        <div class="bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-lg p-6 border border-purple-500/30">
-                            <h3 class="text-2xl font-bold text-purple-400 mb-2">⚡ Active Trading</h3>
+                        <div class="fomo-card purple bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-lg p-6 border border-purple-500/30">
+                            <h3 class="text-2xl font-bold text-purple-400 mb-2 flex items-center gap-2">
+                                <span class="svg-icon zap-icon"></span>
+                                Active Trading
+                            </h3>
                             <p class="text-purple-200" data-en="Real volume and active community building momentum!" data-ru="Реальный объем и активное сообщество набирает обороты!">
                                 Real volume and active community building momentum!
                             </p>
                         </div>
                     </div>
                     
-                    <div class="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg p-8 border border-yellow-500/30 mb-8">
-                        <h3 class="text-2xl font-bold text-yellow-400 mb-4" 
-                            data-en="🚨 Why Smart Money is Already Buying:" 
-                            data-ru="🚨 Почему умные деньги уже покупают:">
-                            🚨 Why Smart Money is Already Buying:
+                    <div class="smart-money-card bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg p-8 border border-yellow-500/30 mb-8">
+                        <h3 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center justify-center gap-2" 
+                            data-en="Why Smart Money is Already Buying:" 
+                            data-ru="Почему умные деньги уже покупают:">
+                            <span class="svg-icon alert-icon"></span>
+                            Why Smart Money is Already Buying:
                         </h3>
                         <div class="grid md:grid-cols-2 gap-4 text-left">
                             <div class="flex items-center space-x-3">
-                                <span class="text-green-400 text-xl">✅</span>
+                                <svg class="check-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="11" fill="#22c55e" stroke="#16a34a" stroke-width="2"/>
+                                    <path d="M8 12.5l3 3 5-6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                                 <span data-en="Fair launch - no presale or team allocation" data-ru="Честный запуск - без предпродажи или распределения команде">Fair launch - no presale or team allocation</span>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <span class="text-green-400 text-xl">✅</span>
+                                <svg class="check-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="11" fill="#22c55e" stroke="#16a34a" stroke-width="2"/>
+                                    <path d="M8 12.5l3 3 5-6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                                 <span data-en="Liquidity will be burned (no rug pulls)" data-ru="Ликвидность будет сожжена (никаких rug pull)">Liquidity will be burned (no rug pulls)</span>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <span class="text-green-400 text-xl">✅</span>
+                                <svg class="check-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="11" fill="#22c55e" stroke="#16a34a" stroke-width="2"/>
+                                    <path d="M8 12.5l3 3 5-6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                                 <span data-en="Strong meme potential with viral marketing" data-ru="Сильный мем-потенциал с вирусным маркетингом">Strong meme potential with viral marketing</span>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <span class="text-green-400 text-xl">✅</span>
+                                <svg class="check-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="11" fill="#22c55e" stroke="#16a34a" stroke-width="2"/>
+                                    <path d="M8 12.5l3 3 5-6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                                 <span data-en="Solana ecosystem growth momentum" data-ru="Рост экосистемы Solana">Solana ecosystem growth momentum</span>
                             </div>
                         </div>
@@ -242,7 +281,7 @@
                         <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" 
                            class="btn btn-primary btn-xl group animate-pulse hover:animate-none transform hover:scale-105 transition-all">
                             <i data-lucide="trending-up" class="w-6 h-6 mr-2 group-hover:rotate-12 transition-transform"></i>
-                            <span data-en="BUY NOW ON PUMP.FUN 🚀" data-ru="КУПИТЬ СЕЙЧАС НА PUMP.FUN 🚀">BUY NOW ON PUMP.FUN 🚀</span>
+                            <span data-en="BUY NOW ON PUMP.FUN" data-ru="КУПИТЬ СЕЙЧАС НА PUMP.FUN">BUY NOW ON PUMP.FUN</span>
                         </a>
                         <a href="https://t.me/DOGE_PEAK" target="_blank" class="btn btn-secondary btn-xl group">
                             <i data-lucide="users" class="w-6 h-6 mr-2 group-hover:scale-110 transition-transform"></i>
@@ -259,65 +298,494 @@
             </div>
         </section>
 
-        <!-- Новая секция с преимуществами -->
-        <section class="py-20 md:py-32 bg-gradient-to-br from-brand-dark via-brand-dark-secondary to-brand-dark relative overflow-hidden">
-            <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-blue opacity-5 rounded-full filter blur-3xl"></div>
+        <!-- NFT Collection Section -->
+        <section id="nft" class="py-20 md:py-32 bg-gradient-to-br from-brand-dark via-brand-dark-secondary to-brand-dark relative overflow-hidden">
+            <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-purple opacity-10 rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-1/4 left-1/4 w-80 h-80 bg-brand-yellow opacity-5 rounded-full filter blur-3xl"></div>
+            
             <div class="container mx-auto px-6 animate-section relative z-10">
+                <!-- Header -->
                 <div class="max-w-4xl mx-auto text-center mb-16">
-                    <h2 class="section-title" data-en="OUR ADVANTAGES" data-ru="НАШИ ПРЕИМУЩЕСТВА">OUR ADVANTAGES</h2>
-                    <p class="section-subtitle" data-en="What makes DOGE PEAK special among thousands of other meme coins" data-ru="Что делает DOGE PEAK особенным среди тысяч других мем-монет">What makes DOGE PEAK special among thousands of other meme coins</p>
+                    <h2 class="section-title gradient-text" 
+                        data-en="🎨 PEAK EXPLORER NFT COLLECTION" 
+                        data-ru="🎨 NFT КОЛЛЕКЦИЯ ПОКОРИТЕЛИ ВЕРШИНЫ">
+                        🎨 PEAK EXPLORER NFT COLLECTION
+                    </h2>
+                    <p class="section-subtitle" 
+                       data-en="Exclusive NFT rewards for the biggest $PEAK holders. Adventure gear for true peak explorers!" 
+                       data-ru="Эксклюзивные NFT награды для крупнейших холдеров $PEAK. Экипировка для настоящих покорителей вершин!">
+                        Exclusive NFT rewards for the biggest $PEAK holders. Adventure gear for true peak explorers!
+                    </p>
                 </div>
+
+                <!-- NFT Rewards Gallery -->
+                <div class="mb-20">
+                    <h3 class="text-3xl font-bold text-center text-white mb-12" 
+                        data-en="🎁 EXCLUSIVE NFT REWARDS SHOWCASE" 
+                        data-ru="🎁 ВИТРИНА ЭКСКЛЮЗИВНЫХ NFT НАГРАД">
+                        🎁 EXCLUSIVE NFT REWARDS SHOWCASE
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                        <!-- NFT Reward 4 -->
+                        <div class="nft-reward-card common-tier group">
+                            <div class="nft-reward-image-container">
+                                <img src="сommon.png" alt="PEAK Explorer NFT Reward 4" class="nft-reward-image">
+                                <div class="nft-tier-badge common">COMMON</div>
+                            </div>
+                            <div class="nft-card-content">
+                                <h4 class="text-xl font-bold text-white mb-2" 
+                                    data-en="Trail Walker Pack" 
+                                    data-ru="Набор Следопыта">
+                                    Trail Walker Pack
+                                </h4>
+                                <p class="text-gray-300 text-sm mb-4" 
+                                   data-en="For holders with 100K+ $PEAK tokens" 
+                                   data-ru="Для держателей с 100К+ токенами $PEAK">
+                                    For holders with 500K+ $PEAK tokens
+                                </p>
+                                <div class="nft-benefits">
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🌟</span>
+                                        <span data-en="+10% Staking APY" data-ru="+10% APY Стейкинга">+10% Staking APY</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">💫</span>
+                                        <span data-en="Access to styers" data-ru="Доступ к стиерам">Access to styers</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🎖️</span>
+                                        <span data-en="Pathfinder Badge" data-ru="Бейджик Следопыт">Pathfinder Badge</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- NFT Reward 3 -->
+                        <div class="nft-reward-card rare-tier group">
+                            <div class="nft-reward-image-container">
+                                <img src="rare.png" alt="PEAK Explorer NFT Reward 3" class="nft-reward-image">
+                                <div class="nft-tier-badge rare">RARE</div>
+                            </div>
+                            <div class="nft-card-content">
+                                <h4 class="text-xl font-bold text-white mb-2" 
+                                    data-en="Mountain Guide Badge" 
+                                    data-ru="Знак Горного Гида">
+                                    Mountain Guide Badge
+                                </h4>
+                                <p class="text-gray-300 text-sm mb-4" 
+                                   data-en="For holders with 500K+ $PEAK tokens" 
+                                   data-ru="Для держателей с 500К+ токенами $PEAK">
+                                    For holders with 500K+ $PEAK tokens
+                                </p>
+                                <div class="nft-benefits">
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">⭐</span>
+                                        <span data-en="+15% Staking APY" data-ru="+15% APY Стейкинга">+10% Staking APY</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🎪</span>
+                                        <span data-en="Community Events" data-ru="События Сообщества">Community Events</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🎖️</span>
+                                        <span data-en="Wind Traces Badge" data-ru="Бейджик Следы Ветра">Wind Traces Badge</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- NFT Reward 2 -->
+                        <div class="nft-reward-card epic-tier group">
+                            <div class="nft-reward-image-container">
+                                <img src="Epic.png" alt="PEAK Explorer NFT Reward 2" class="nft-reward-image">
+                                <div class="nft-tier-badge epic">EPIC</div>
+                            </div>
+                            <div class="nft-card-content">
+                                <h4 class="text-xl font-bold text-white mb-2" 
+                                    data-en="Peak Climber Gear" 
+                                    data-ru="Снаряжение Покорителя">
+                                    Peak Climber Gear
+                                </h4>
+                                <p class="text-gray-300 text-sm mb-4" 
+                                   data-en="For holders with 1M+ $PEAK tokens" 
+                                   data-ru="Для держателей с 1М+ токенами $PEAK">
+                                    For holders with 1M+ $PEAK tokens
+                                </p>
+                                <div class="nft-benefits">
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🪙</span>
+                                        <span data-en="+20% Staking APY" data-ru="+20% APY Стейкинга">+20% Staking APY</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🎯</span>
+                                        <span data-en="Early Access" data-ru="Ранний Доступ">Early Access</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🎖️</span>
+                                        <span data-en="Master of Peaks Badge" data-ru="Бейджик Мастера Вершин">Master of Peaks Badge</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- NFT Reward 1 -->
+                        <div class="nft-reward-card legendary-tier group">
+                            <div class="nft-reward-image-container">
+                                <img src="1.png" alt="PEAK Explorer NFT Reward 1" class="nft-reward-image">
+                                <div class="nft-tier-badge legendary">LEGENDARY</div>
+                            </div>
+                            <div class="nft-card-content">
+                                <h4 class="text-xl font-bold text-white mb-2" 
+                                    data-en="Summit Master Collection" 
+                                    data-ru="Коллекция Мастера Вершин">
+                                    Summit Master Collection
+                                </h4>
+                                <p class="text-gray-300 text-sm mb-4" 
+                                   data-en="For holders with 10M+ $PEAK tokens" 
+                                   data-ru="Для держателей с 10М+ токенами $PEAK">
+                                    For holders with 10M+ $PEAK tokens
+                                </p>
+                                <div class="nft-benefits">
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">💰</span>
+                                        <span data-en="+25% Staking APY" data-ru="+25% APY Стейкинга">+25% Staking APY</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">💎</span>
+                                        <span data-en="VIP Access" data-ru="VIP Доступ">VIP Access</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">🔥</span>
+                                        <span data-en="DAO-voting" data-ru="DAO-голосования">DAO-voting</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NFT Collection Overview -->
+                    <div class="bg-gradient-to-r from-purple-900/20 to-yellow-900/20 rounded-2xl p-8 border border-yellow-500/20 mb-16">
+                        <div class="grid lg:grid-cols-3 gap-8 items-center">
+                            <!-- Collection Preview -->
+                            <div class="lg:col-span-1">
+                                <div class="nft-collection-preview">
+                                    <img src="2.png" alt="NFT Collection Preview" class="w-full rounded-xl">
+                                    <div class="collection-stats mt-4">
+                                        <div class="stat-row">
+                                            <span class="stat-label" data-en="Total Supply:" data-ru="Общий тираж:">Total Supply:</span>
+                                            <span class="stat-value">500 NFTs</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label" data-en="Legendary:" data-ru="Легендарные:">Legendary:</span>
+                                            <span class="stat-value legendary-text">10 NFTs</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label" data-en="Epic:" data-ru="Эпические:">Epic:</span>
+                                            <span class="stat-value epic-text">50 NFTs</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label" data-en="Rare:" data-ru="Редкие:">Rare:</span>
+                                            <span class="stat-value rare-text">100 NFTs</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label" data-en="Common:" data-ru="Обычные:">Common:</span>
+                                            <span class="stat-value common-text">340 NFTs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Collection Details -->
+                            <div class="lg:col-span-2">
+                                <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3" 
+                                    data-en="Complete Adventure Collection" 
+                                    data-ru="Полная Коллекция Приключений">
+                                    <span class="svg-icon svg-icon-large backpack-icon-fixed"></span>
+                                    Complete Adventure Collection
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <div class="collection-feature">
+                                        <span class="svg-icon svg-icon-large mountain-icon-fixed feature-icon-svg"></span>
+                                        <div>
+                                            <h4 class="text-lg font-semibold text-yellow-400" 
+                                                data-en="Peak Explorer Gear" 
+                                                data-ru="Снаряжение Покорителя Вершин">
+                                                Peak Explorer Gear
+                                            </h4>
+                                            <p class="text-gray-300" 
+                                               data-en="Authentic mountain climbing equipment: professional backpacks, weather-resistant hats, and essential survival gear designed for the ultimate peak conquest." 
+                                               data-ru="Подлинное альпинистское снаряжение: профессиональные рюкзаки, всепогодные шляпы и необходимое снаряжение для покорения вершин.">
+                                                Authentic mountain climbing equipment: professional backpacks, weather-resistant hats, and essential survival gear designed for the ultimate peak conquest.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="collection-feature">
+                                        <span class="svg-icon svg-icon-large diamond-icon-simple feature-icon-svg"></span>
+                                        <div>
+                                            <h4 class="text-lg font-semibold text-yellow-400" 
+                                                data-en="Utility-First Design" 
+                                                data-ru="Дизайн с Упором на Утилитарность">
+                                                Utility-First Design
+                                            </h4>
+                                            <p class="text-gray-300" 
+                                               data-en="Every NFT provides real value: staking multipliers, governance rights, exclusive access to new features, and revenue sharing from the PEAK ecosystem." 
+                                               data-ru="Каждый NFT обеспечивает реальную ценность: множители стейкинга, права голоса, эксклюзивный доступ к новым функциям и долю доходов экосистемы PEAK.">
+                                                Every NFT provides real value: staking multipliers, governance rights, exclusive access to new features, and revenue sharing from the PEAK ecosystem.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="collection-feature">
+                                        <span class="svg-icon svg-icon-large network-icon-fixed feature-icon-svg"></span>
+                                        <div>
+                                            <h4 class="text-lg font-semibold text-yellow-400" 
+                                                data-en="Growing Ecosystem" 
+                                                data-ru="Растущая Экосистема">
+                                                Growing Ecosystem
+                                            </h4>
+                                            <p class="text-gray-300" 
+                                               data-en="Future integrations with DeFi protocols, gaming platforms, and metaverse experiences. Your NFT is not just art—it's your key to the entire PEAK universe!" 
+                                               data-ru="Будущие интеграции с DeFi протоколами, игровыми платформами и метавселенными. Ваш NFT это не просто искусство—это ключ ко всей вселенной PEAK!">
+                                                Future integrations with DeFi protocols, gaming platforms, and metaverse experiences. Your NFT is not just art—it's your key to the entire PEAK universe!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Profile Badges Section -->
+                <div class="mt-20">
+                    <h3 class="text-3xl font-bold text-center text-white mb-4" 
+                        data-en="🏆 EXCLUSIVE PROFILE BADGES" 
+                        data-ru="🏆 ЭКСКЛЮЗИВНЫЕ ЗНАЧКИ ПРОФИЛЯ">
+                        🏆 EXCLUSIVE PROFILE BADGES
+                    </h3>
+                    <p class="text-center text-gray-300 mb-12 max-w-3xl mx-auto" 
+                       data-en="Earn unique profile badges as your first reward! These badges will be displayed in your user profile and showcase your tier status in the PEAK community." 
+                       data-ru="Получите уникальные значки профиля в качестве первой награды! Эти значки будут отображаться в вашем профиле пользователя и демонстрировать ваш статус в сообществе PEAK.">
+                        Earn unique profile badges as your first reward! These badges will be displayed in your user profile and showcase your tier status in the PEAK community.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                        <!-- Legendary Badge -->
+                        <div class="profile-badge-card legendary-badge">
+                            <div class="badge-image-container">
+                                <img src="legend.png" alt="Legendary Badge" class="badge-image">
+                                <div class="badge-glow legendary-glow"></div>
+                            </div>
+                            <div class="badge-info">
+                                <h4 class="badge-title legendary-text" 
+                                    data-en="Legendary Explorer" 
+                                    data-ru="Легендарный Исследователь">
+                                    Legendary Explorer
+                                </h4>
+                                <p class="badge-requirement" 
+                                   data-en="10M+ $PEAK holders" 
+                                   data-ru="Держатели 10М+ $PEAK">
+                                    10M+ $PEAK holders
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Epic Badge -->
+                        <div class="profile-badge-card epic-badge">
+                            <div class="badge-image-container">
+                                <img src="epi.png" alt="Epic Badge" class="badge-image">
+                                <div class="badge-glow epic-glow"></div>
+                            </div>
+                            <div class="badge-info">
+                                <h4 class="badge-title epic-text" 
+                                    data-en="Epic Climber" 
+                                    data-ru="Эпический Альпинист">
+                                    Epic Climber
+                                </h4>
+                                <p class="badge-requirement" 
+                                   data-en="1M+ $PEAK holders" 
+                                   data-ru="Держатели 1М+ $PEAK">
+                                    1M+ $PEAK holders
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Rare Badge -->
+                        <div class="profile-badge-card rare-badge">
+                            <div class="badge-image-container">
+                                <img src="rar.png" alt="Rare Badge" class="badge-image">
+                                <div class="badge-glow rare-glow"></div>
+                            </div>
+                            <div class="badge-info">
+                                <h4 class="badge-title rare-text" 
+                                    data-en="Rare Guide" 
+                                    data-ru="Редкий Гид">
+                                    Rare Guide
+                                </h4>
+                                <p class="badge-requirement" 
+                                   data-en="500K+ $PEAK holders" 
+                                   data-ru="Держатели 500К+ $PEAK">
+                                    500K+ $PEAK holders
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Common Badge -->
+                        <div class="profile-badge-card common-badge">
+                            <div class="badge-image-container">
+                                <img src="comm.png" alt="Common Badge" class="badge-image">
+                                <div class="badge-glow common-glow"></div>
+                            </div>
+                            <div class="badge-info">
+                                <h4 class="badge-title common-text" 
+                                    data-en="Trail Walker" 
+                                    data-ru="Следопыт">
+                                    Trail Walker
+                                </h4>
+                                <p class="badge-requirement" 
+                                   data-en="100K+ $PEAK holders" 
+                                   data-ru="Держатели 100К+ $PEAK">
+                                    10K+ $PEAK holders
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <p class="text-sm text-gray-400" 
+                           data-en="* Badges will be automatically awarded and displayed in your profile upon reaching the required $PEAK holdings" 
+                           data-ru="* Значки будут автоматически присвоены и отображены в вашем профиле при достижении необходимого количества $PEAK">
+                            * Badges will be automatically awarded and displayed in your profile upon reaching the required $PEAK holdings
+                        </p>
+                    </div>
+                </div>
+                </div>
+
+                <!-- NFT Utility & Staking Benefits -->
+                 
+                <div class="bg-gradient-to-r from-purple-900/20 to-yellow-900/20 rounded-2xl p-8 mb-16 border border-yellow-500/20">
+                    
+                    <h3 class="text-2xl font-bold text-center text-white mb-8" 
+                        data-en="🚀 NFT UTILITY & STAKING BOOST" 
+                        data-ru="🚀 УТИЛИТАРНОСТЬ NFT И БУСТ СТЕЙКИНГА">
+                        🚀 NFT UTILITY & STAKING BOOST
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="text-4xl mb-4">📈</div>
+                            <h4 class="text-xl font-semibold text-yellow-400 mb-3" 
+                                data-en="Staking Multiplier" 
+                                data-ru="Множитель Стейкинга">
+                                Staking Multiplier
+                            </h4>
+                            <p class="text-gray-300" 
+                               data-en="NFT holders get +25% APY bonus when staking $PEAK tokens" 
+                               data-ru="Владельцы NFT получают +25% бонус к APY при стейкинге токенов $PEAK">
+                                NFT holders get +25% APY bonus when staking $PEAK tokens
+                            </p>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="text-4xl mb-4">🎁</div>
+                            <h4 class="text-xl font-semibold text-yellow-400 mb-3" 
+                                data-en="Exclusive Access" 
+                                data-ru="Эксклюзивный Доступ">
+                                Exclusive Access
+                            </h4>
+                            <p class="text-gray-300" 
+                               data-en="Early access to new features, partnerships, and future token launches" 
+                               data-ru="Ранний доступ к новым функциям, партнерствам и будущим запускам токенов">
+                                Early access to new features, partnerships, and future token launches
+                            </p>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="text-4xl mb-4">💰</div>
+                            <h4 class="text-xl font-semibold text-yellow-400 mb-3" 
+                                data-en="Revenue Share" 
+                                data-ru="Доля от Доходов">
+                                Revenue Share
+                            </h4>
+                            <p class="text-gray-300" 
+                               data-en="NFT holders receive 10% of all trading fees generated by PEAK ecosystem" 
+                               data-ru="Владельцы NFT получают 10% от всех торговых комиссий экосистемы PEAK">
+                                NFT holders receive 10% of all trading fees generated by PEAK ecosystem
+                            </p>
+                            
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+                <!-- Development Roadmap -->
+                <div class="max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold text-center text-white mb-12" 
+                        data-en="🗺️ NFT DEVELOPMENT ROADMAP" 
+                        data-ru="🗺️ ДОРОЖНАЯ КАРТА РАЗВИТИЯ NFT">
+                        🗺️ NFT DEVELOPMENT ROADMAP
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="nft-roadmap-phase">
+                            <div class="nft-phase-number">Phase 1</div>
+                            <h4 class="text-xl font-semibold text-yellow-400 mb-3" 
+                                data-en="Genesis Drop (Q4 2025)" 
+                                data-ru="Первичный Выпуск (4 кв. 2025)">
+                                Genesis Drop (Q4 2025)
+                            </h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li data-en="• Launch 500 Genesis NFTs for top holders" 
+                                    data-ru="• Запуск 500 Genesis NFT для топ холдеров">
+                                    • Launch 500 Genesis NFTs for top holders
+                                </li>
+                                <li data-en="• Implement staking boost feature" 
+                                    data-ru="• Внедрение функции буста стейкинга">
+                                    • Implement staking boost feature
+                                </li>
+                                <li data-en="• NFT marketplace integration" 
+                                    data-ru="• Интеграция с маркетплейсом NFT">
+                                    • NFT marketplace integration
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="nft-roadmap-phase">
+                            <div class="nft-phase-number">Phase 2</div>
+                            <h4 class="text-xl font-semibold text-yellow-400 mb-3" 
+                                data-en="Utility Expansion (Q1 2026)" 
+                                data-ru="Расширение Утилитарности (1 кв. 2026)">
+                                Utility Expansion (Q1 2026)
+                            </h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li data-en="• Revenue sharing mechanism launch" 
+                                    data-ru="• Запуск механизма распределения доходов">
+                                    • Revenue sharing mechanism launch
+                                </li>
+                                <li data-en="• NFT breeding & crafting system" 
+                                    data-ru="• Система разведения и крафта NFT">
+                                    • NFT breeding & crafting system
+                                </li>
+                                <li data-en="• Gamification features" 
+                                    data-ru="• Игровые функции">
+                                    • Gamification features
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="text-center mt-16">
+                 
+                    
+                    <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" 
+                       class="btn btn-primary btn-lg group">
+                        <i data-lucide="gem" class="w-6 h-6 mr-2 group-hover:animate-bounce"></i>
+                        <span data-en="Start Collecting $PEAK Now!" data-ru="Начните Собирать $PEAK Сейчас!">Start Collecting $PEAK Now!</span>
+                    </a>
+                </div>
+
                 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div class="advantage-card floating">
-                        <div class="advantage-icon">
-                            <i data-lucide="shield-check" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="advantage-title" data-en="Security" data-ru="Безопасность">Security</h3>
-                        <p class="advantage-text" data-en="Liquidity will be burned, eliminating the possibility of 'rug pull'. Your investments are protected." data-ru="Ликвидность будет сожжена, что исключает возможность 'rug pull'. Ваши инвестиции защищены.">Liquidity will be burned, eliminating the possibility of "rug pull". Your investments are protected.</p>
-                    </div>
-                    
-                    <div class="advantage-card floating">
-                        <div class="advantage-icon">
-                            <i data-lucide="users" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="advantage-title" data-en="Community" data-ru="Сообщество">Community</h3>
-                        <p class="advantage-text" data-en="Active and growing community of climbers ready to reach the peak together." data-ru="Активное и растущее сообщество альпинистов, готовых идти к вершине вместе.">Active and growing community of climbers ready to reach the peak together.</p>
-                    </div>
-                    
-                    <div class="advantage-card floating">
-                        <div class="advantage-icon">
-                            <i data-lucide="trending-up" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="advantage-title" data-en="Growth Potential" data-ru="Потенциал роста">Growth Potential</h3>
-                        <p class="advantage-text" data-en="Clear roadmap and plans for listings on major exchanges ensure growth potential." data-ru="Четкая дорожная карта и планы листингов на крупных биржах обеспечивают потенциал роста.">Clear roadmap and plans for listings on major exchanges ensure growth potential.</p>
-                    </div>
-                    
-                    <div class="advantage-card floating">
-                        <div class="advantage-icon">
-                            <i data-lucide="zap" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="advantage-title" data-en="Fast Transactions" data-ru="Быстрые транзакции">Fast Transactions</h3>
-                        <p class="advantage-text" data-en="Running on Solana blockchain - fast and cheap transactions." data-ru="Работаем на блокчейне Solana - быстрые и дешевые транзакции.">Running on Solana blockchain - fast and cheap transactions.</p>
-                    </div>
-                    
-                    <div class="advantage-card floating">
-                        <div class="advantage-icon">
-                            <i data-lucide="target" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="advantage-title" data-en="Clear Goal" data-ru="Четкая цель">Clear Goal</h3>
-                        <p class="advantage-text" data-en="Not just a meme coin, but a project with ambitious plans and clear goals." data-ru="Не просто мем-монета, а проект с амбициозными планами и четкими целями.">Not just a meme coin, but a project with ambitious plans and clear goals.</p>
-                    </div>
-                    
-                    <div class="advantage-card floating">
-                        <div class="advantage-icon">
-                            <i data-lucide="rocket" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="advantage-title" data-en="Innovation" data-ru="Инновации">Innovation</h3>
-                        <p class="advantage-text" data-en="Continuous project development and implementation of new features for holders." data-ru="Постоянное развитие проекта и внедрение новых функций для держателей.">Continuous project development and implementation of new features for holders.</p>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <section id="about" class="py-20 md:py-32 bg-brand-dark relative overflow-hidden">
@@ -439,22 +907,22 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td data-en="<i data-lucide='swords' class='table-icon'></i>Fair Launch" data-ru="<i data-lucide='swords' class='table-icon'></i>Честный запуск"><i data-lucide="swords" class="table-icon"></i>Fair Launch</td>
+                                    <td><i data-lucide="swords" class="table-icon"></i><span data-en="Fair Launch" data-ru="Честный запуск">Fair Launch</span></td>
                                     <td>100%</td>
                                     <td data-en="No presales or team tokens. Everyone starts on equal terms on pump.fun." data-ru="Никаких предварительных продаж и токенов для команды. Все начинают с равных условий на pump.fun.">No presales or team tokens. Everyone starts on equal terms on pump.fun.</td>
                                 </tr>
                                 <tr>
-                                    <td data-en="<i data-lucide='coins' class='table-icon'></i>Total Supply" data-ru="<i data-lucide='coins' class='table-icon'></i>Общее предложение"><i data-lucide="coins" class="table-icon"></i>Total Supply</td>
-                                    <td>1,000,000,000 $PEAK</td>
+                                    <td><i data-lucide="coins" class="table-icon"></i><span data-en="Total Supply" data-ru="Общее предложение">Total Supply</span></td>
+                                    <td>1B $PEAK</td>
                                     <td data-en="Fixed number of tokens. Scarcity is our friend." data-ru="Фиксированное количество токенов. Дефицит — наш друг.">Fixed number of tokens. Scarcity is our friend.</td>
                                 </tr>
                                  <tr>
-                                    <td data-en="<i data-lucide='receipt' class='table-icon'></i>Transaction Taxes" data-ru="<i data-lucide='receipt' class='table-icon'></i>Налоги на транзакции"><i data-lucide="receipt" class="table-icon"></i>Transaction Taxes</td>
+                                    <td><i data-lucide="receipt" class="table-icon"></i><span data-en="Transaction Taxes" data-ru="Налоги на транзакции">Transaction Taxes</span></td>
                                     <td>0%</td>
                                     <td data-en="Buy and sell without fees. All your funds are yours." data-ru="Покупай и продавай без комиссий. Все твои средства — твои.">Buy and sell without fees. All your funds are yours.</td>
                                 </tr>
                                 <tr>
-                                    <td data-en="<i data-lucide='flame' class='table-icon'></i>Liquidity" data-ru="<i data-lucide='flame' class='table-icon'></i>Ликвидность"><i data-lucide="flame" class="table-icon"></i>Liquidity</td>
+                                    <td><i data-lucide="flame" class="table-icon"></i><span data-en="Liquidity" data-ru="Ликвидность">Liquidity</span></td>
                                     <td data-en="Auto-burned" data-ru="Автоматически сжигается">Auto-burned</td>
                                     <td data-en="Once we reach the goal on pump.fun, liquidity will be created on Raydium and burned. This guarantees protection from 'rug pull'." data-ru="Как только мы достигнем цели на pump.fun, ликвидность будет создана на Raydium и сожжена. Это гарантия безопасности от 'rug pull'.">Once we reach the goal on pump.fun, liquidity will be created on Raydium and burned. This guarantees protection from "rug pull".</td>
                                 </tr>
@@ -529,12 +997,13 @@
                     <i data-lucide="twitter" class="w-8 h-8 group-hover:scale-125 transition-transform"></i>
                 </a>
                 <a href="https://t.me/c/3089934422/3" class="social-link group">
-                    <i data-lucide="discord" class="w-8 h-8 group-hover:scale-125 transition-transform"></i>
+                    <i data-lucide="message-circle" class="w-8 h-8 group-hover:scale-125 transition-transform"></i>
                 </a>
             </div>
             
             <!-- Quick links -->
             <div class="flex flex-wrap justify-center gap-8 mb-8 text-sm">
+                <a href="#nft" class="hover:text-brand-yellow transition-colors" data-en="NFT Collection" data-ru="NFT Коллекция">NFT Collection</a>
                 <a href="#about" class="hover:text-brand-yellow transition-colors" data-en="Why Us?" data-ru="Почему мы?">Why Us?</a>
                 <a href="#roadmap" class="hover:text-brand-yellow transition-colors" data-en="Roadmap" data-ru="Дорожная карта">Roadmap</a>
                 <a href="#tokenomics" class="hover:text-brand-yellow transition-colors" data-en="Tokenomics" data-ru="Токеномика">Tokenomics</a>
@@ -549,5 +1018,17 @@
 
 
     <script type="module" src="script.js"></script>
+    <!-- Right-side social rail (desktop) -->
+    <div id="social-rail" class="hidden md:flex flex-col items-center fixed right-4 top-1/3 space-y-4 z-50">
+        <a href="https://t.me/DOGE_PEAK" target="_blank" class="social-rail-link" title="Telegram">
+            <i data-lucide="send" class="w-6 h-6"></i>
+        </a>
+        <a href="https://x.com/DOGE_PEAK" target="_blank" class="social-rail-link" title="X / Twitter">
+            <i data-lucide="twitter" class="w-6 h-6"></i>
+        </a>
+        <a href="https://t.me/c/3089934422/3" target="_blank" class="social-rail-link" title="Chat">
+            <i data-lucide="message-circle" class="w-6 h-6"></i>
+        </a>
+    </div>
 </body>
 </html>
