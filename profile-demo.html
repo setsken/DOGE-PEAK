@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOGE PEAK - Profile Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <header class="bg-black/80 backdrop-blur-sm border-b border-yellow-500/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="DOGE PEAK Logo" class="w-10 h-10">
+                <h1 class="text-2xl font-bold text-yellow-400">DOGE PEAK</h1>
+            </div>
+            <a href="index.html" class="text-yellow-400 hover:text-yellow-300 transition-colors">← Back to Main</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        <!-- User Profile Demo Section -->
+        <div class="bg-gradient-to-br from-gray-900/50 to-black/30 rounded-2xl p-8 border border-gray-700/30">
+            <h3 class="text-3xl font-bold text-center text-white mb-6">
+                👤 USER PROFILE PREVIEW
+            </h3>
+            
+            <p class="text-center text-gray-400 mb-12">
+                See how your badges will appear in your profile interface
+            </p>
+
+            <!-- Profile Card -->
+            <div class="max-w-2xl mx-auto bg-black/40 rounded-2xl p-8 border border-yellow-500/20">
+                <!-- Profile Header -->
+                <div class="flex items-center gap-6 mb-8">
+                    <div class="profile-avatar">
+                        <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-2xl font-bold text-black">
+                            DX
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-2xl font-bold text-white mb-2">DogeExplorer47</h4>
+                        <p class="text-yellow-400 font-semibold">Trail Walker • 25K $PEAK</p>
+                        <p class="text-gray-400 text-sm">Member since January 2025</p>
+                    </div>
+                </div>
+
+                <!-- Profile Stats -->
+                <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+                    <div class="bg-gray-800/50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-white">1</div>
+                        <div class="text-sm text-gray-400">Badges Earned</div>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-yellow-400">25K</div>
+                        <div class="text-sm text-gray-400">$PEAK Holdings</div>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-green-400">Common</div>
+                        <div class="text-sm text-gray-400">Current Tier</div>
+                    </div>
+                </div>
+
+                <!-- Active Badges -->
+                <div class="mb-8">
+                    <h5 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <span class="text-green-400">●</span>
+                        <span>Active Badges</span>
+                    </h5>
+                    <div class="flex gap-6 flex-wrap justify-center">
+                        <!-- Common Badge - Active -->
+                        <div class="profile-badge-mini">
+                            <div class="profile-mini-badge common-active">
+                                <img src="comm.png" alt="Common" class="mini-badge-image">
+                                <div class="mini-badge-glow common-glow-mini"></div>
+                            </div>
+                            <div class="badge-mini-title common-text">Trail Walker</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Locked Badges -->
+                <div>
+                    <h5 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <span class="text-gray-500">●</span>
+                        <span>Locked Badges</span>
+                    </h5>
+                    <div class="flex gap-6 flex-wrap justify-center">
+                        <!-- Rare Badge - Locked -->
+                        <div class="profile-badge-mini">
+                            <div class="profile-mini-badge locked-badge">
+                                <div class="locked-badge-circle">
+                                    <span class="locked-icon">🔒</span>
+                                </div>
+                            </div>
+                            <div class="badge-mini-title text-gray-500">Peak Seeker</div>
+                        </div>
+                        
+                        <!-- Epic Badge - Locked -->
+                        <div class="profile-badge-mini">
+                            <div class="profile-mini-badge locked-badge">
+                                <div class="locked-badge-circle">
+                                    <span class="locked-icon">🔒</span>
+                                </div>
+                            </div>
+                            <div class="badge-mini-title text-gray-500">Summit Master</div>
+                        </div>
+                        
+                        <!-- Legendary Badge - Locked -->
+                        <div class="profile-badge-mini">
+                            <div class="profile-mini-badge locked-badge">
+                                <div class="locked-badge-circle">
+                                    <span class="locked-icon">🔒</span>
+                                </div>
+                            </div>
+                            <div class="badge-mini-title text-gray-500">Legendary Explorer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="text-center mt-8">
+                <a href="index.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-lg transition-colors">
+                    ← Back to Main Site
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
