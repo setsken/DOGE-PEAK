@@ -844,6 +844,20 @@ section {
     z-index: 2;
 }
 
+/* Fix strong tag appearance inside How To Buy cards */
+.buy-step-text strong,
+.buy-step p strong {
+    color: var(--brand-yellow) !important;
+    font-weight: 800 !important;
+    font-style: normal !important;
+    text-shadow: 0 0 6px rgba(250, 204, 21, 0.35);
+}
+
+/* Make sure strong doesn't inherit unwanted transforms (e.g. uppercase) */
+.buy-step-text strong {
+    text-transform: none !important;
+}
+
 .buy-step-number {
     position: absolute;
     top: 0.5rem; /* Сдвигаем ниже */

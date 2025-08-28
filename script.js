@@ -263,27 +263,40 @@ function initLanguageSwitcher() {
     function switchLanguage(lang) {
         const elements = document.querySelectorAll('[data-en][data-ru]');
         
-        elements.forEach(element => {
+    elements.forEach(element => {
             const text = element.dataset[lang];
-            if (text) {
-                // Если это span с текстом или другой элемент без иконок
-                if (element.tagName === 'SPAN' || !text.includes('<i ') && !text.includes('<svg')) {
-                    element.textContent = text;
-                } else {
-                    // Для элементов с HTML содержимым (иконки)
-                    element.innerHTML = text;
-                    // Повторно инициализируем иконки после изменения innerHTML
-                    setTimeout(() => {
-                        try {
-                            if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                                lucide.createIcons();
-                            }
-                        } catch (e) {
-                            console.log('Ошибка при переинициализации иконок:', e);
+            if (!text) return;
+
+            // Detect whether the localized string contains HTML tags;
+            // if so, set innerHTML so tags like <strong> or <a> render properly.
+            const containsHtml = /<[^>]+>/.test(text);
+
+            if (containsHtml) {
+                element.innerHTML = text;
+                // Re-init icons if we injected markup that may contain icon placeholders
+                setTimeout(() => {
+                    try {
+                        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                            lucide.createIcons();
                         }
-                    }, 10);
-                }
+                    } catch (e) {
+                        // ignore
+                    }
+                }, 10);
+            } else {
+                element.textContent = text;
             }
+        });
+
+        // Diagnostic log for debugging (check browser console)
+        try { console.log('[i18n] switchLanguage:', lang); } catch(e) {}
+
+        // Fallback: some browsers or environments may have issues with dataset HTML parsing
+        // Force innerHTML for the buy-step paragraphs to ensure <strong>/<a> render correctly
+        const buyStepEls = document.querySelectorAll('.buy-step-text');
+        buyStepEls.forEach(el => {
+            const t = el.dataset[lang];
+            if (t) el.innerHTML = t;
         });
     }
     
