@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPhaseAnimations();
     initLanguageSwitcher(); // Добавляем переключатель языков
     initWalletConnection(); // Добавляем подключение кошелька
+    initProfileSystem(); // Профиль и ачивки
 });
 
 function initIcons() {
@@ -542,6 +543,12 @@ async function updateUserProfile() {
 
         // Update UI immediately
         updateProfileUI(username, balance, tier);
+        if (typeof renderProfileStats === 'function') {
+            try { renderProfileStats(); } catch(e){ console.warn('renderProfileStats failed', e); }
+        }
+        if (typeof renderAchievements === 'function') {
+            try { renderAchievements(); } catch(e){ console.warn('renderAchievements failed', e); }
+        }
         
         // Mark as connected and hide connect buttons
         document.body.classList.add('wallet-connected');
@@ -737,6 +744,131 @@ function updateProfileUI(username, balance, tier) {
     userBalanceMobileEl.title = `${balance.toLocaleString('en-US', {maximumFractionDigits: 6})} $PEAK`;
         userBalanceMobileEl.style.display = 'block';
         console.log(`✅ Updated mobile balance: ${formattedBalance}`);
+    }
+}
+
+// ================= PROFILE & ACHIEVEMENTS =================
+const ACHIEVEMENTS = [
+    { id: 'trail',  name: 'Trail Walker',    req:   0, image: 'comm.png',   fallback: '🥾', label: 'Start the journey' },
+    { id: 'rare',   name: 'Rare Guide',      req: 500000, image: 'rar.png',  fallback: '🏔️', label: 'Hold 500K $PEAK' },
+    { id: 'epic',   name: 'Epic Climber',    req:1000000, image: 'epi.png',  fallback: '⚔️', label: 'Hold 1M $PEAK' },
+    { id: 'legend', name: 'Legendary Explorer', req:10000000, image: 'legend.png', fallback: '👑', label: 'Hold 10M $PEAK' },
+    // Future / hidden milestones (no images yet -> will use fallback emoji)
+    { id: 'mystery1', name: 'Peak Seeker',    req:20000000, icon: '🧭', label: 'Hold 20M $PEAK', hidden: true },
+    { id: 'mystery2', name: 'Summit Master',  req:50000000, icon: '⛰️', label: 'Hold 50M $PEAK', hidden: true },
+    { id: 'mystery3', name: 'Galaxy Legend',  req:100000000, icon: '🌌', label: 'Hold 100M $PEAK', hidden: true }
+];
+
+function renderProfileStats() {
+    try {
+        const bal = walletState.peakBalance || 0;
+        const tierObj = walletState.tier || calculateTier(bal);
+        const balEl = document.getElementById('profile-balance');
+        const tierEl = document.getElementById('profile-tier');
+        if (balEl) balEl.textContent = bal.toLocaleString('en-US', { maximumFractionDigits: 6 });
+        if (tierEl) tierEl.textContent = tierObj.name || '-';
+        console.log('[ProfileStats] Updated', { bal, tier: tierObj.name });
+    } catch (e) {
+        console.warn('renderProfileStats error', e);
+    }
+}
+
+function initProfileSystem() {
+    const modal = document.getElementById('profile-modal');
+    if (!modal) return;
+
+    const openTriggers = [document.getElementById('user-name'), document.getElementById('user-avatar')];
+    openTriggers.forEach(el => el && el.addEventListener('click', () => openProfileModal()));
+
+    document.getElementById('profile-close-btn')?.addEventListener('click', closeProfileModal);
+    document.getElementById('logout-btn')?.addEventListener('click', () => {
+        closeProfileModal();
+        disconnectWallet();
+    });
+    document.getElementById('refresh-achievements-btn')?.addEventListener('click', renderAchievements);
+    document.getElementById('nickname-save-btn')?.addEventListener('click', saveNickname);
+    document.getElementById('nickname-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') saveNickname(); });
+
+    // Load nickname if saved
+    const stored = localStorage.getItem('peak_nickname');
+    if (stored) {
+        const nameEl = document.getElementById('user-name');
+        if (nameEl) nameEl.textContent = stored;
+    }
+}
+
+function openProfileModal() {
+    const modal = document.getElementById('profile-modal');
+    if (!modal) return;
+    modal.classList.add('show');
+    renderProfileStats();
+    renderAchievements();
+    const input = document.getElementById('nickname-input');
+    if (input) {
+        input.value = document.getElementById('user-name')?.textContent || '';
+        setTimeout(()=>input.focus(), 50);
+    }
+}
+
+function closeProfileModal() {
+    const modal = document.getElementById('profile-modal');
+    if (modal) modal.classList.remove('show');
+}
+
+function saveNickname() {
+    const input = document.getElementById('nickname-input');
+    if (!input) return;
+    let value = input.value.trim();
+    if (!value) return;
+    // Basic sanitize
+    value = value.replace(/<|>|"|'/g, '');
+    localStorage.setItem('peak_nickname', value);
+    const nameEl = document.getElementById('user-name');
+    const nameMobile = document.getElementById('user-name-mobile');
+    if (nameEl) nameEl.textContent = value;
+    if (nameMobile) nameMobile.textContent = value;
+    showNotification('Никнейм сохранён', 'success');
+    renderProfileStats();
+}
+
+function renderAchievements() {
+    const activeWrap = document.getElementById('active-badges');
+    const lockedWrap = document.getElementById('locked-badges');
+    if (!activeWrap || !lockedWrap) return;
+    const bal = walletState.peakBalance || 0;
+    console.log('[Achievements] Re-render with balance', bal);
+    activeWrap.innerHTML = '';
+    lockedWrap.innerHTML = '';
+    ACHIEVEMENTS.forEach(a => {
+        const unlocked = bal >= a.req;
+        const el = document.createElement('div');
+        el.className = `achievement-badge ${unlocked ? 'unlocked' : 'locked'}`;
+        const label = a.name;
+        const description = a.label || '';
+        // Determine visual icon: prefer image if provided
+        let iconHtml = '';
+        if (a.image) {
+            iconHtml = `<img src="${a.image}" alt="${label}" class="badge-img" onerror="this.onerror=null;this.replaceWith(document.createTextNode('${a.fallback || '★'}'))">`;
+        } else if (a.icon) {
+            iconHtml = a.icon;
+        } else if (a.fallback) {
+            iconHtml = a.fallback;
+        } else {
+            iconHtml = '★';
+        }
+        const requirementText = unlocked ? 'Unlocked' : `Requires ${a.req.toLocaleString()} $PEAK`;
+        el.innerHTML = `
+            <div class="badge-icon">${iconHtml}<span class="lock">🔒</span></div>
+            <div class="badge-label">${label}</div>
+            <div class="badge-tooltip">${description || requirementText}</div>
+        `;
+        (unlocked ? activeWrap : lockedWrap).appendChild(el);
+    });
+    if (!activeWrap.children.length) {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'text-xs text-gray-500';
+        placeholder.textContent = 'No active badges yet';
+        activeWrap.appendChild(placeholder);
     }
 }
 

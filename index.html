@@ -174,6 +174,60 @@
     </header>
 
     <main>
+            <!-- Profile Modal -->
+            <div id="profile-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+                <div class="bg-brand-dark-secondary w-full max-w-lg rounded-xl border border-white/10 shadow-2xl p-6 relative animate-section">
+                    <button id="profile-close-btn" class="absolute top-3 right-3 text-gray-400 hover:text-white" aria-label="Close">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold mb-4 text-white flex items-center gap-2">
+                        <i data-lucide="user" class="w-6 h-6"></i>
+                        <span data-en="Profile" data-ru="Профиль">Profile</span>
+                    </h2>
+                    <div class="space-y-6">
+                        <!-- Nickname Section -->
+                        <div>
+                            <label for="nickname-input" class="block text-sm font-medium text-gray-300 mb-1" data-en="Nickname" data-ru="Никнейм">Nickname</label>
+                            <div class="flex gap-2">
+                                <input id="nickname-input" type="text" maxlength="24" class="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-brand-yellow" placeholder="Nickname">
+                                <button id="nickname-save-btn" class="btn btn-primary px-4" data-en="Save" data-ru="Сохранить">Save</button>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-400" data-en="Stored locally only" data-ru="Хранится только локально">Stored locally only</p>
+                        </div>
+                        <!-- Balance / Tier Quick Info -->
+                        <div id="profile-stats" class="grid grid-cols-2 gap-4">
+                            <div class="p-4 rounded-lg bg-black/30 border border-white/10 text-center">
+                                <div class="text-xs uppercase tracking-wider text-gray-400" data-en="Balance" data-ru="Баланс">Balance</div>
+                                <div id="profile-balance" class="mt-1 text-lg font-bold text-brand-yellow">0</div>
+                            </div>
+                            <div class="p-4 rounded-lg bg-black/30 border border-white/10 text-center">
+                                <div class="text-xs uppercase tracking-wider text-gray-400" data-en="Tier" data-ru="Уровень">Tier</div>
+                                <div id="profile-tier" class="mt-1 text-lg font-bold text-white">-</div>
+                            </div>
+                        </div>
+                        <!-- Achievements -->
+                        <div id="achievements-wrapper">
+                            <h3 class="text-lg font-semibold mb-3" data-en="Achievements" data-ru="Ачивки">Achievements</h3>
+                            <div class="space-y-5" id="achievements-section">
+                                <div>
+                                    <div class="text-sm font-semibold uppercase tracking-wide text-gray-300 mb-2" data-en="Active Badges" data-ru="Активные значки">Active Badges</div>
+                                    <div id="active-badges" class="flex flex-wrap gap-5"></div>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold uppercase tracking-wide text-gray-300 mb-2" data-en="Locked Badges" data-ru="Закрытые значки">Locked Badges</div>
+                                    <div id="locked-badges" class="flex flex-wrap gap-5"></div>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-[11px] text-gray-500" data-en="Hover a locked badge to see requirement" data-ru="Наведите на закрытый значок для условия">Hover a locked badge to see requirement</p>
+                        </div>
+                        <!-- Actions -->
+                        <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                            <button id="logout-btn" class="text-red-400 hover:text-red-300 font-medium" data-en="Disconnect" data-ru="Выйти">Disconnect</button>
+                            <button id="refresh-achievements-btn" class="text-gray-300 hover:text-white text-sm" data-en="Refresh" data-ru="Обновить">Refresh</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <section id="hero" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
             <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://r2.flowith.net/files/o/1755907622753-doge_peak_website_banner_index_1@1024x1024.png');"></div>
             <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
