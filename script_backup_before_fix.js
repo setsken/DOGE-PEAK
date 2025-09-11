@@ -329,7 +329,6 @@ let walletState = {
     tier: null,
     provider: null
 };
-let walletConnecting = false; // guard flag
 
 function initWalletConnection() {
     console.log('Initializing wallet connection...');
@@ -371,82 +370,75 @@ function initWalletConnection() {
 }
 
 async function connectWallet() {
-    if (walletConnecting) {
-        console.log('Connect already in progress, ignoring duplicate click');
-        return;
-    }
-    walletConnecting = true;
-    const startTs = Date.now();
-    const connectBtn = document.getElementById('connect-wallet-btn');
-    const connectMobileBtn = document.getElementById('connect-wallet-mobile-btn');
-
-    function setLoading(label) {
+    try {
+        console.log('Attempting to connect wallet...');
+        const connectBtn = document.getElementById('connect-wallet-btn');
+        const connectMobileBtn = document.getElementById('connect-wallet-mobile-btn');
+        
+        // Show loading state
         if (connectBtn) {
             connectBtn.classList.add('wallet-connecting');
-            connectBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 mr-2 animate-spin"></i><span>${label}</span>`;
+            connectBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 mr-2 animate-spin"></i><span>Connecting...</span>';
         }
         if (connectMobileBtn) {
             connectMobileBtn.classList.add('wallet-connecting');
-            connectMobileBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 mr-2 animate-spin"></i><span>${label}</span>`;
-        }
-        setTimeout(() => { try { lucide.createIcons(); } catch(_){} }, 5);
-    }
-    setLoading('Connecting...');
-
-    try {
-        const provider = window.solana || window.phantom?.solana;
-        if (!provider) {
-            throw new Error('Phantom wallet not found');
-        }
-        if (!provider.isPhantom) {
-            console.warn('Provider detected but not Phantom, continuing anyway');
+            connectMobileBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 mr-2 animate-spin"></i><span>Connecting...</span>';
         }
 
-        // Listen for native events (fallback)
-        let eventResolved = false;
-        const eventPromise = new Promise((resolve) => {
-            try {
-                provider.once('connect', pubKey => {
-                    eventResolved = true;
-                    resolve({ publicKey: pubKey });
-                });
-            } catch(_) { resolve(null); }
-        });
+        // Re-init icons for loading spinner
+        setTimeout(() => {
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }, 10);
 
-        // Primary promise
-        const directPromise = provider.connect({ onlyIfTrusted: false });
+        // Add timeout for wallet connection
+        const connectionTimeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Wallet connection timeout')), 10000)
+        );
 
-        // Extended timeout (30s)
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Wallet connection timeout')), 30000));
-
-        const response = await Promise.race([
-            Promise.any([directPromise, eventPromise]),
-            timeoutPromise
-        ]);
-
-        if (!response || !response.publicKey) throw new Error('No publicKey returned');
-
+        // Connect to Phantom wallet with timeout
+        const connectPromise = window.solana.connect();
+        const response = await Promise.race([connectPromise, connectionTimeout]);
+        
         walletState.publicKey = response.publicKey.toString();
         walletState.connected = true;
-        walletState.provider = provider;
-        console.log('✅ Wallet connected in', (Date.now()-startTs)+'ms', walletState.publicKey);
-        setLoading('Loading profile...');
+        walletState.provider = window.solana;
 
-        // Profile load with its own timeout (10s)
-        const profileTimeout = new Promise((_, reject) => setTimeout(()=>reject(new Error('Profile load timeout')), 10000));
-        await Promise.race([ updateUserProfile(), profileTimeout ]);
-        console.log('✅ Profile updated');
-    } catch (err) {
-        console.error('Wallet connection failed:', err);
+        console.log('Wallet connected successfully:', walletState.publicKey);
+
+        // Update loading text
+        if (connectBtn) {
+            connectBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 mr-2 animate-spin"></i><span>Loading profile...</span>';
+        }
+        if (connectMobileBtn) {
+            connectMobileBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 mr-2 animate-spin"></i><span>Loading profile...</span>';
+        }
+
+        // Check PEAK balance and update UI with timeout
+        const updateTimeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Profile update timeout')), 5000)
+        );
+
+        await Promise.race([updateUserProfile(), updateTimeout]);
+
+        console.log('Profile updated successfully');
+
+    } catch (error) {
+        console.error('Wallet connection failed:', error);
+        
+        // Reset buttons on error
         resetConnectButtons();
-        let msg = 'Failed to connect wallet. Please try again.';
-        const message = err?.message || '';
-        if (message.includes('timeout')) msg = 'Connection timed out. Please check your wallet and try again.';
-        else if (message.includes('User rejected') || message.includes('rejected')) msg = 'Connection cancelled by user.';
-        else if (message.includes('Phantom wallet not found')) msg = 'Phantom not detected. Install extension.';
-        showNotification(msg, 'error');
-    } finally {
-        walletConnecting = false;
+        
+        // Show user-friendly error message
+        let errorMessage = 'Failed to connect wallet. Please try again.';
+        if (error.message.includes('timeout')) {
+            errorMessage = 'Connection timed out. Please check your wallet and try again.';
+        } else if (error.message.includes('User rejected')) {
+            errorMessage = 'Connection cancelled by user.';
+        }
+        
+        showNotification(errorMessage, 'error');
     }
 }
 
@@ -508,16 +500,9 @@ async function checkExistingConnection() {
 async function updateUserProfile() {
     try {
         console.log('Updating user profile...');
-    // Loading indicators
-    const tierEl = document.getElementById('user-tier');
-    const balEl = document.getElementById('user-balance');
-    if (tierEl) tierEl.textContent = 'Loading...';
-    if (balEl) { balEl.textContent = '...'; balEl.style.display = 'block'; }
-
-    const t0 = performance.now();
-    const balance = await getPeakBalance(walletState.publicKey);
-    const t1 = performance.now();
-    console.log(`⏱ Balance fetch time: ${(t1 - t0).toFixed(0)}ms, balance=${balance}`);
+        
+        // Get balance quickly
+        const balance = await getPeakBalance(walletState.publicKey);
         walletState.peakBalance = balance;
         
         // Calculate tier based on balance
@@ -528,17 +513,6 @@ async function updateUserProfile() {
         const username = generateUsername(walletState.publicKey);
 
         console.log('Profile data:', { username, balance, tier: tier.name });
-
-        // Ensure balance display element exists (desktop)
-        let userTierEl = document.getElementById('user-tier');
-        if (!userTierEl) {
-            const nameEl = document.getElementById('user-name');
-            if (nameEl) {
-                userTierEl = document.createElement('div');
-                userTierEl.id = 'user-tier';
-                nameEl.parentNode.appendChild(userTierEl);
-            }
-        }
 
         // Update UI immediately
         updateProfileUI(username, balance, tier);
@@ -561,9 +535,6 @@ async function updateUserProfile() {
         showNotification(`Welcome ${username}! You are a ${tier.name}`, 'success');
 
         console.log('Profile updated successfully');
-        if (balance === 0) {
-            showNotification('Баланс 0 — убедитесь, что backend запущен если ожидаете другое значение.', 'info');
-        }
 
     } catch (error) {
         console.error('Failed to update profile:', error);
@@ -670,12 +641,10 @@ function updateProfileUI(username, balance, tier) {
     const userNameEl = document.getElementById('user-name');
     const userTierEl = document.getElementById('user-tier');
     const userAvatarEl = document.getElementById('user-avatar');
-    const userBalanceEl = document.getElementById('user-balance');
 
     // Mobile profile
     const userNameMobileEl = document.getElementById('user-name-mobile');
     const userTierMobileEl = document.getElementById('user-tier-mobile');
-    const userBalanceMobileEl = document.getElementById('user-balance-mobile');
 
     const formattedBalance = formatBalance(balance);
     const initials = username.substring(0, 2).toUpperCase();
@@ -697,17 +666,10 @@ function updateProfileUI(username, balance, tier) {
     }
     
     if (userTierEl) {
-        const tierText = `${tier.name}`;
+        const tierText = `${tier.name} • ${formattedBalance} $PEAK`;
         userTierEl.textContent = tierText;
         userTierEl.className = `user-tier text-sm ${tier.class}`;
         console.log(`✅ Updated desktop tier: ${tierText}`);
-    }
-
-    if (userBalanceEl) {
-    userBalanceEl.textContent = `${formattedBalance} $PEAK`;
-    userBalanceEl.title = `${balance.toLocaleString('en-US', {maximumFractionDigits: 6})} $PEAK`;
-        userBalanceEl.style.display = 'block';
-        console.log(`✅ Updated desktop balance: ${formattedBalance}`);
     }
 
     if (userAvatarEl) {
@@ -726,17 +688,10 @@ function updateProfileUI(username, balance, tier) {
     }
     
     if (userTierMobileEl) {
-        const tierText = `${tier.name}`;
+        const tierText = `${tier.name} • ${formattedBalance} $PEAK`;
         userTierMobileEl.textContent = tierText;
         userTierMobileEl.className = `text-sm ${tier.class}`;
         console.log(`✅ Updated mobile tier: ${tierText}`);
-    }
-
-    if (userBalanceMobileEl) {
-    userBalanceMobileEl.textContent = `${formattedBalance} $PEAK`;
-    userBalanceMobileEl.title = `${balance.toLocaleString('en-US', {maximumFractionDigits: 6})} $PEAK`;
-        userBalanceMobileEl.style.display = 'block';
-        console.log(`✅ Updated mobile balance: ${formattedBalance}`);
     }
 }
 
@@ -766,72 +721,204 @@ function resetConnectButtons() {
     }, 10);
 }
 
-// ---- BALANCE CHECK (BACKEND + FALLBACK) ----
-// Tries local backend (Flask) first, then falls back to direct RPC (limited) if backend offline.
 async function getPeakBalance(publicKey) {
-    if (!publicKey) return 0;
-    console.log('🔎 Start PEAK balance fetch:', { publicKey, mint: PEAK_TOKEN_MINT });
-    // 1. Try backend endpoints (relative, 127.0.0.1, localhost)
-    const apiBases = [];
-    if (location.protocol.startsWith('http')) {
-        apiBases.push('/api/peak-balance/'); // reverse proxy or same-origin deploy
-    }
-    apiBases.push('http://127.0.0.1:5000/api/peak-balance/');
-    apiBases.push('http://localhost:5000/api/peak-balance/');
-
-    for (const base of apiBases) {
-        try {
-            const url = base.startsWith('http') ? `${base}${publicKey}` : `${base}${publicKey}`;
-            console.log(`🌐 Trying backend: ${url}`);
-            const controller = new AbortController();
-            const timeoutMs = 3500; // per attempt
-            const to = setTimeout(()=>controller.abort(), timeoutMs);
-            const res = await fetch(url, { signal: controller.signal });
-            clearTimeout(to);
-            if (res.ok) {
-                const data = await res.json();
-                if (typeof data.balance === 'number') {
-                    console.log('✅ Backend balance success via', base, data);
-                    return data.balance;
-                }
-                console.warn('Backend returned no numeric balance', data);
-            } else {
-                console.warn(`Backend ${base} status ${res.status}`);
-            }
-        } catch (err) {
-            console.warn(`Backend attempt failed for ${base}:`, err.message);
-        }
-    }
-    console.warn('⚠️ All backend attempts failed, using direct RPC fallback. Ensure Flask server is running (python app.py)');
-
-    // 2. Minimal direct fallback: single RPC mint-filter only (faster, less CORS risk if allowed)
     try {
-        const res = await fetch('https://api.mainnet-beta.solana.com', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                jsonrpc: '2.0', id: 1, method: 'getTokenAccountsByOwner',
-                params: [ publicKey, { mint: PEAK_TOKEN_MINT }, { encoding: 'jsonParsed' } ]
-            })
-        });
-        if (res.ok) {
-            const data = await res.json();
-            const list = data?.result?.value || [];
-            if (list.length) {
-                const info = list[0].account.data.parsed.info.tokenAmount;
-                const precise = Number(info.amount) / 10 ** info.decimals;
-                console.log('✅ Direct fallback balance:', precise);
-                return precise;
+        console.log('Getting PEAK balance for:', publicKey);
+        console.log('PEAK Token Mint:', PEAK_TOKEN_MINT);
+        
+        // Create timeout promise
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Balance check timeout')), 15000)
+        );
+        
+        const balancePromise = new Promise(async (resolve, reject) => {
+            try {
+                console.log(`🔍 Checking PEAK token balance for wallet: ${publicKey}...`);
+                
+                // Method 1: Try direct Solana RPC (most reliable)
+                try {
+                    console.log('Method 1: Query parameter authentication');
+                    
+                    const url = `https://pro-api.solscan.io/v2.0/account/token-accounts?address=${publicKey}&token=${SOLSCAN_API_KEY}`;
+                    console.log('API URL (without token):', url.replace(SOLSCAN_API_KEY, '[TOKEN]'));
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    console.log(`Response status: ${response.status}`);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('✅ Query param auth success:', data);
+                        
+                        if (data.success && data.data && Array.isArray(data.data)) {
+                            console.log(`Found ${data.data.length} token accounts`);
+                            
+                            for (const token of data.data) {
+                                const mint = token.token_address || token.mint;
+                                const symbol = token.token_symbol || token.symbol || '';
+                                const amount = parseFloat(token.amount || 0);
+                                
+                                console.log(`Token: ${symbol} (${mint}) - Balance: ${amount}`);
+                                
+                                if (mint === PEAK_TOKEN_MINT) {
+                                    console.log(`🎯 Found PEAK! Balance: ${amount}`);
+                                    resolve(amount);
+                                    return;
+                                }
+                            }
+                        }
+                    } else {
+                        const errorText = await response.text();
+                        console.warn(`Query param auth failed: ${response.status} - ${errorText}`);
+                    }
+                } catch (error) {
+                    console.warn('Query param auth error:', error);
+                }
+                
+                // Method 2: Try Helius API (alternative)
+                try {
+                    console.log('Method 2: Helius API as alternative');
+                    
+                    const heliusUrl = `https://api.helius.xyz/v0/addresses/${publicKey}/balances?api-key=28de18db-8c1f-499a-8d1d-c7e90901d326`;
+                    
+                    const response = await fetch(heliusUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('✅ Helius API success:', data);
+                        
+                        if (data.tokens && Array.isArray(data.tokens)) {
+                            for (const token of data.tokens) {
+                                const mint = token.mint;
+                                const amount = parseFloat(token.amount || 0);
+                                
+                                if (mint === PEAK_TOKEN_MINT) {
+                                    console.log(`🎯 Found PEAK via Helius! Balance: ${amount}`);
+                                    resolve(amount);
+                                    return;
+                                }
+                            }
+                        }
+                    } else {
+                        console.warn(`Helius API failed: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.warn('Helius API error:', error);
+                }
+                
+                // Method 3: Try direct Solana RPC
+                try {
+                    console.log('Method 3: Direct Solana RPC');
+                    
+                    const rpcUrl = 'https://api.mainnet-beta.solana.com';
+                    
+                    const response = await fetch(rpcUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            id: 1,
+                            method: 'getTokenAccountsByOwner',
+                            params: [
+                                publicKey,
+                                { programId: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA' },
+                                { encoding: 'jsonParsed' }
+                            ]
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('✅ Solana RPC success');
+                        
+                        if (data.result && data.result.value) {
+                            console.log(`Found ${data.result.value.length} token accounts via RPC`);
+                            
+                            for (const account of data.result.value) {
+                                const mint = account.account.data.parsed.info.mint;
+                                const amount = parseFloat(account.account.data.parsed.info.tokenAmount.uiAmount || 0);
+                                
+                                console.log(`Token mint: ${mint} - Balance: ${amount}`);
+                                
+                                if (mint === PEAK_TOKEN_MINT) {
+                                    console.log(`🎯 Found PEAK via RPC! Balance: ${amount}`);
+                                    resolve(amount);
+                                    return;
+                                }
+                            }
+                            
+                            console.log('❌ PEAK not found via RPC');
+                        }
+                    } else {
+                        console.warn(`Solana RPC failed: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.warn('Solana RPC error:', error);
+                }
+                
+                // Method 4: Try public SolScan (no auth required)
+                try {
+                    console.log('Method 4: Public SolScan API');
+                    
+                    const url = `https://public-api.solscan.io/account/splTokens/${publicKey}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('✅ Public SolScan success:', data);
+                        
+                        if (Array.isArray(data)) {
+                            for (const token of data) {
+                                const mint = token.tokenAddress;
+                                const amount = parseFloat(token.tokenAmount?.uiAmount || 0);
+                                
+                                if (mint === PEAK_TOKEN_MINT) {
+                                    console.log(`🎯 Found PEAK via public SolScan! Balance: ${amount}`);
+                                    resolve(amount);
+                                    return;
+                                }
+                            }
+                        }
+                    } else {
+                        console.warn(`Public SolScan failed: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.warn('Public SolScan error:', error);
+                }
+                
+                console.log('❌ All API methods failed - no PEAK tokens found');
+                resolve(0);
+                
+            } catch (error) {
+                console.error('Error in balance promise:', error);
+                reject(error);
             }
-        } else {
-            console.warn('Direct RPC fallback status', res.status);
-        }
-    } catch (e) {
-        console.warn('Direct RPC fallback error:', e.message);
+        });
+        
+        return await Promise.race([balancePromise, timeoutPromise]);
+        
+    } catch (error) {
+        console.error('Error getting PEAK balance:', error);
+        return 0;
     }
-
-    console.log('❌ Balance not found; returning 0');
-    return 0;
 }
 
 function showNotification(message, type = 'info') {

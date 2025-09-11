@@ -107,7 +107,31 @@
                     <button class="lang-btn" data-lang="ru" title="Русский">🇷🇺</button>
                 </div>
             </div>
-            <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" class="btn btn-primary hidden md:flex"
+            <!-- Wallet Connection Button (shown when not connected) -->
+            <button id="connect-wallet-btn" class="btn btn-primary hidden md:flex" style="display: flex;">
+                <i data-lucide="wallet" class="w-5 h-5 mr-2"></i>
+                <span data-en="Connect Wallet" data-ru="Подключить кошелек">Connect Wallet</span>
+            </button>
+
+            <!-- User Profile (shown when connected) -->
+            <div id="user-profile" class="hidden items-center space-x-4" style="display: none;">
+                <div class="profile-info text-right">
+                    <div class="user-name text-white font-bold" id="user-name">User</div>
+                    <div class="user-tier text-sm" id="user-tier">Connecting...</div>
+                    <div class="user-balance text-xs text-gray-300" id="user-balance" style="display:none;">0 $PEAK</div>
+                </div>
+                <div class="profile-avatar">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-sm font-bold text-black" id="user-avatar">
+                        ?
+                    </div>
+                </div>
+                <button id="disconnect-btn" class="text-gray-400 hover:text-red-400 transition-colors">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Fallback buy button (shown when wallet not supported) -->
+            <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" class="btn btn-primary hidden" id="fallback-buy-btn"
                data-en="Buy on pump.fun" data-ru="Купить на pump.fun">
                 Buy on pump.fun
             </a>
@@ -128,7 +152,21 @@
                 <button class="lang-btn" data-lang="ru" title="Русский">🇷🇺 Русский</button>
             </div>
             <div class="p-4">
-                 <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" class="btn btn-primary w-full" data-en="Buy on pump.fun" data-ru="Купить на pump.fun">
+                <!-- Mobile Wallet Button -->
+                <button id="connect-wallet-mobile-btn" class="btn btn-primary w-full mb-3">
+                    <i data-lucide="wallet" class="w-5 h-5 mr-2"></i>
+                    <span data-en="Connect Wallet" data-ru="Подключить кошелек">Connect Wallet</span>
+                </button>
+                
+                <!-- Mobile Profile (hidden initially) -->
+                <div id="user-profile-mobile" class="hidden mb-3 text-center text-white">
+                    <div id="user-name-mobile" class="font-bold">User</div>
+                    <div id="user-tier-mobile" class="text-sm text-yellow-400">Trail Walker</div>
+                    <div id="user-balance-mobile" class="text-xs text-gray-300 mt-1" style="display:none;">0 $PEAK</div>
+                </div>
+
+                <!-- Fallback buy button -->
+                <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" class="btn btn-primary w-full hidden" id="fallback-buy-mobile-btn" data-en="Buy on pump.fun" data-ru="Купить на pump.fun">
                     Купить на pump.fun
                 </a>
             </div>
@@ -1030,7 +1068,7 @@
     </footer>
 
 
-    <script type="module" src="script.js?v=1.1"></script>
+    <script type="module" src="script.js?v=2.3"></script>
     <!-- Inline fallback to ensure buy-step HTML (e.g. <strong>, <a>) renders
          even if the module script is cached or fails to run. This runs early
          and is safe because it only uses data-* attributes from the page. -->
