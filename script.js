@@ -261,6 +261,9 @@ function initLanguageSwitcher() {
     const langButtons = document.querySelectorAll('.lang-btn');
     let currentLang = 'en'; // Default language is English
     
+    // Делаем currentLang доступным глобально
+    window.currentLanguage = currentLang;
+    
     // Set default language on page load
     switchLanguage(currentLang);
     
@@ -269,6 +272,7 @@ function initLanguageSwitcher() {
             const lang = btn.dataset.lang;
             if (lang !== currentLang) {
                 currentLang = lang;
+                window.currentLanguage = lang; // Обновляем глобальную переменную
                 switchLanguage(lang);
                 updateActiveButton(lang);
             }
@@ -367,8 +371,8 @@ function initWalletConnection() {
         disconnectBtn.addEventListener('click', disconnectWallet);
     }
 
-    // Check if already connected
-    checkExistingConnection();
+    // Небольшая задержка для стабилизации кошелька, затем проверяем существующее подключение
+    setTimeout(checkExistingConnection, 100);
 }
 
 async function connectWallet() {
@@ -430,6 +434,11 @@ async function connectWallet() {
         walletState.publicKey = response.publicKey.toString();
         walletState.connected = true;
         walletState.provider = provider;
+        
+        // Сохраняем состояние подключения в localStorage
+        localStorage.setItem('peak_wallet_connected', 'true');
+        localStorage.setItem('peak_wallet_publickey', walletState.publicKey);
+        
         console.log('✅ Wallet connected in', (Date.now()-startTs)+'ms', walletState.publicKey);
         setLoading('Loading profile...');
 
@@ -468,6 +477,10 @@ async function disconnectWallet() {
             provider: null
         };
 
+        // Очищаем сохраненное состояние подключения
+        localStorage.removeItem('peak_wallet_connected');
+        localStorage.removeItem('peak_wallet_publickey');
+
         // Reset UI - force show connect buttons, hide profile
         document.body.classList.remove('wallet-connected');
         
@@ -494,15 +507,65 @@ async function disconnectWallet() {
 
 async function checkExistingConnection() {
     try {
-        if (window.solana && window.solana.isConnected) {
-            walletState.publicKey = window.solana.publicKey.toString();
-            walletState.connected = true;
-            walletState.provider = window.solana;
+        console.log('🔍 Checking existing wallet connection...');
+        
+        // Проверяем сохраненное состояние подключения
+        const wasConnected = localStorage.getItem('peak_wallet_connected') === 'true';
+        const savedPublicKey = localStorage.getItem('peak_wallet_publickey');
+        
+        console.log('💾 Saved state:', { wasConnected, savedPublicKey });
+        
+        if (window.solana && window.solana.isPhantom) {
+            // Сначала проверяем текущее состояние
+            if (window.solana.isConnected && window.solana.publicKey) {
+                console.log('✅ Wallet already connected');
+                walletState.publicKey = window.solana.publicKey.toString();
+                walletState.connected = true;
+                walletState.provider = window.solana;
+                
+                // Сохраняем состояние
+                localStorage.setItem('peak_wallet_connected', 'true');
+                localStorage.setItem('peak_wallet_publickey', walletState.publicKey);
+                
+                await updateUserProfile();
+                return;
+            }
             
-            await updateUserProfile();
+            // Если был подключен ранее, пытаемся восстановить подключение
+            if (wasConnected && savedPublicKey) {
+                console.log('🔄 Attempting to restore wallet connection...');
+                try {
+                    // Запрашиваем подключение без попапа (только если уже разрешено)
+                    const response = await window.solana.connect({ onlyIfTrusted: true });
+                    
+                    if (response && response.publicKey) {
+                        console.log('✅ Wallet connection restored successfully');
+                        walletState.publicKey = response.publicKey.toString();
+                        walletState.connected = true;
+                        walletState.provider = window.solana;
+                        
+                        // Обновляем сохраненное состояние
+                        localStorage.setItem('peak_wallet_connected', 'true');
+                        localStorage.setItem('peak_wallet_publickey', walletState.publicKey);
+                        
+                        await updateUserProfile();
+                        return;
+                    }
+                } catch (connectError) {
+                    console.log('❌ Failed to restore connection:', connectError.message);
+                    // Очищаем сохраненное состояние при ошибке
+                    localStorage.removeItem('peak_wallet_connected');
+                    localStorage.removeItem('peak_wallet_publickey');
+                }
+            }
         }
+        
+        console.log('💡 No existing connection found or restored');
     } catch (error) {
-        console.log('No existing connection found');
+        console.log('❌ Error checking existing connection:', error);
+        // Очищаем сохраненное состояние при ошибке
+        localStorage.removeItem('peak_wallet_connected');
+        localStorage.removeItem('peak_wallet_publickey');
     }
 }
 
@@ -527,8 +590,12 @@ async function updateUserProfile() {
 
         // Generate username from public key
         const username = generateUsername(walletState.publicKey);
+        
+        // Проверяем, есть ли сохраненный никнейм
+        const savedNickname = localStorage.getItem('peak_nickname');
+        const displayName = savedNickname || username;
 
-        console.log('Profile data:', { username, balance, tier: tier.name });
+        console.log('Profile data:', { username, savedNickname, displayName, balance, tier: tier.name });
 
         // Ensure balance display element exists (desktop)
         let userTierEl = document.getElementById('user-tier');
@@ -542,7 +609,7 @@ async function updateUserProfile() {
         }
 
         // Update UI immediately
-        updateProfileUI(username, balance, tier);
+        updateProfileUI(displayName, balance, tier);
         if (typeof renderProfileStats === 'function') {
             try { renderProfileStats(); } catch(e){ console.warn('renderProfileStats failed', e); }
         }
@@ -565,7 +632,7 @@ async function updateUserProfile() {
         if (userProfileMobile) userProfileMobile.style.display = 'block';
 
         // Show success notification
-        showNotification(`Welcome ${username}! You are a ${tier.name}`, 'success');
+        showNotification(`Welcome ${displayName}! You are a ${tier.name}`, 'success');
 
         console.log('Profile updated successfully');
         if (balance === 0) {
@@ -605,7 +672,7 @@ function calculateTier(balance) {
         tier = {
             name: 'Legendary Explorer',
             key: 'legendary',
-            class: 'tier-legendary',
+            class: 'tier-legendary-text',
             icon: '👑'
         };
     } else if (balance >= 1000000) { // 1M+
@@ -673,6 +740,10 @@ function updateProfileUI(username, balance, tier) {
         formattedBalance: formatBalance(balance)
     });
     
+    // Проверяем, есть ли сохраненный никнейм
+    const savedNickname = localStorage.getItem('peak_nickname');
+    const displayName = savedNickname || username;
+    
     // Desktop profile
     const userNameEl = document.getElementById('user-name');
     const userTierEl = document.getElementById('user-tier');
@@ -685,27 +756,32 @@ function updateProfileUI(username, balance, tier) {
     const userBalanceMobileEl = document.getElementById('user-balance-mobile');
 
     const formattedBalance = formatBalance(balance);
-    const initials = username.substring(0, 2).toUpperCase();
+    const initials = displayName.substring(0, 2).toUpperCase();
 
     console.log(`📱 UI Elements found:`, {
         userNameEl: !!userNameEl,
         userTierEl: !!userTierEl,
         userAvatarEl: !!userAvatarEl,
         userNameMobileEl: !!userNameMobileEl,
-        userTierMobileEl: !!userTierMobileEl
+        userTierMobileEl: !!userTierMobileEl,
+        savedNickname,
+        displayName
     });
 
     if (userNameEl) {
-        userNameEl.textContent = username;
+        userNameEl.textContent = displayName;
+        // Очищаем предыдущие классы тира
+        userNameEl.classList.remove('tier-legendary', 'tier-epic', 'tier-rare', 'tier-common');
         if (tier.key === 'legendary') {
             userNameEl.classList.add('tier-legendary');
         }
-        console.log(`✅ Updated desktop username: ${username}`);
+        console.log(`✅ Updated desktop username: ${displayName}`);
     }
     
     if (userTierEl) {
         const tierText = `${tier.name}`;
         userTierEl.textContent = tierText;
+        // Применяем обычный класс тира для всех, включая legendary
         userTierEl.className = `user-tier text-sm ${tier.class}`;
         console.log(`✅ Updated desktop tier: ${tierText}`);
     }
@@ -719,22 +795,25 @@ function updateProfileUI(username, balance, tier) {
 
     if (userAvatarEl) {
         userAvatarEl.textContent = initials;
-        userAvatarEl.className = `w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-sm font-bold text-black ${tier.class}`;
+        userAvatarEl.className = `w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-sm font-bold text-black cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200 ${tier.class}`;
         console.log(`✅ Updated desktop avatar: ${initials}`);
     }
 
     // Mobile updates
     if (userNameMobileEl) {
-        userNameMobileEl.textContent = username;
+        userNameMobileEl.textContent = displayName;
+        // Очищаем предыдущие классы тира
+        userNameMobileEl.classList.remove('tier-legendary', 'tier-epic', 'tier-rare', 'tier-common');
         if (tier.key === 'legendary') {
             userNameMobileEl.classList.add('tier-legendary');
         }
-        console.log(`✅ Updated mobile username: ${username}`);
+        console.log(`✅ Updated mobile username: ${displayName}`);
     }
     
     if (userTierMobileEl) {
         const tierText = `${tier.name}`;
         userTierMobileEl.textContent = tierText;
+        // Применяем обычный класс тира для всех, включая legendary
         userTierMobileEl.className = `text-sm ${tier.class}`;
         console.log(`✅ Updated mobile tier: ${tierText}`);
     }
@@ -748,15 +827,63 @@ function updateProfileUI(username, balance, tier) {
 }
 
 // ================= PROFILE & ACHIEVEMENTS =================
+
+// Переводы для тултипов достижений
+const ACHIEVEMENT_TRANSLATIONS = {
+    en: {
+        unlocked: 'Unlocked',
+        locked: 'Locked',
+        requirement: 'Requirement',
+        balance: 'Your balance',
+        status: 'Status',
+        connected: 'Connected',
+        notConnected: 'Not connected',
+        connectWallet: 'Connect wallet',
+        achievementEarned: '🎉 Achievement Earned!',
+        walletConnected: '🎉 Wallet Successfully Connected!',
+        connectToUnlock: 'Connect your wallet to unlock',
+        needMore: 'Need {amount} more $PEAK',
+        hold: 'Hold {amount} $PEAK'
+    },
+    ru: {
+        unlocked: 'Разблокировано',
+        locked: 'Заблокировано',
+        requirement: 'Требование',
+        balance: 'Ваш баланс',
+        status: 'Статус',
+        connected: 'Подключен',
+        notConnected: 'Не подключен',
+        connectWallet: 'Подключить кошелек',
+        achievementEarned: '🎉 Достижение получено!',
+        walletConnected: '🎉 Кошелек успешно подключен!',
+        connectToUnlock: 'Подключите кошелек для разблокировки',
+        needMore: 'Нужно еще {amount} $PEAK',
+        hold: 'Держать {amount} $PEAK'
+    }
+};
+
+// Функция для получения перевода
+function getTranslation(key, params = {}) {
+    const lang = window.currentLanguage || 'en';
+    let text = ACHIEVEMENT_TRANSLATIONS[lang]?.[key] || ACHIEVEMENT_TRANSLATIONS.en[key] || key;
+    
+    // Замена параметров в тексте
+    Object.keys(params).forEach(param => {
+        text = text.replace(`{${param}}`, params[param]);
+    });
+    
+    return text;
+}
+
 const ACHIEVEMENTS = [
-    { id: 'trail',  name: 'Trail Walker',    req:   0, image: 'comm.png',   fallback: '🥾', label: 'Start the journey' },
-    { id: 'rare',   name: 'Rare Guide',      req: 500000, image: 'rar.png',  fallback: '🏔️', label: 'Hold 500K $PEAK' },
-    { id: 'epic',   name: 'Epic Climber',    req:1000000, image: 'epi.png',  fallback: '⚔️', label: 'Hold 1M $PEAK' },
-    { id: 'legend', name: 'Legendary Explorer', req:10000000, image: 'legend.png', fallback: '👑', label: 'Hold 10M $PEAK' },
+    { id: 'trail',  name: { en: 'Trail Walker', ru: 'Тропоходец' },    req: 100000, image: 'comm.png',   fallback: '🥾', label: 'Hold 100K $PEAK' },
+    { id: 'rare',   name: { en: 'Rare Guide', ru: 'Редкий Гид' },      req: 1000000, image: 'rar.png',  fallback: '🏔️', label: 'Hold 1M $PEAK' },
+    { id: 'epic',   name: { en: 'Epic Climber', ru: 'Эпический Альпинист' },    req:5000000, image: 'epi.png',  fallback: '⚔️', label: 'Hold 5M $PEAK' },
+    { id: 'legend', name: { en: 'Legendary Explorer', ru: 'Легендарный Исследователь' }, req:10000000, image: 'legend.png', fallback: '👑', label: 'Hold 10M $PEAK' },
     // Future / hidden milestones (no images yet -> will use fallback emoji)
-    { id: 'mystery1', name: 'Peak Seeker',    req:20000000, icon: '🧭', label: 'Hold 20M $PEAK', hidden: true },
-    { id: 'mystery2', name: 'Summit Master',  req:50000000, icon: '⛰️', label: 'Hold 50M $PEAK', hidden: true },
-    { id: 'mystery3', name: 'Galaxy Legend',  req:100000000, icon: '🌌', label: 'Hold 100M $PEAK', hidden: true }
+    { id: 'mystery1', name: { en: 'Wallet connected', ru: 'Кошелек подключен' },    req:0, image: 'wallet.png', label: 'Wallet connected', hidden: true },
+    { id: 'mystery2', name: { en: 'Summit Master', ru: 'Мастер Вершин' },  req:50000000, icon: '⛰️', label: 'Hold 50M $PEAK', hidden: true },
+    { id: 'mystery3', name: { en: 'Galaxy Legend', ru: 'Легенда Галактики' },  req:100000000, icon: '🌌', label: 'Hold 100M $PEAK', hidden: true }
 ];
 
 function renderProfileStats() {
@@ -766,7 +893,11 @@ function renderProfileStats() {
         const balEl = document.getElementById('profile-balance');
         const tierEl = document.getElementById('profile-tier');
         if (balEl) balEl.textContent = bal.toLocaleString('en-US', { maximumFractionDigits: 6 });
-        if (tierEl) tierEl.textContent = tierObj.name || '-';
+        if (tierEl) {
+            tierEl.textContent = tierObj.name || '-';
+            // Применяем цвет тира
+            tierEl.className = `mt-1 text-lg font-bold ${tierObj.class || 'text-white'}`;
+        }
         console.log('[ProfileStats] Updated', { bal, tier: tierObj.name });
     } catch (e) {
         console.warn('renderProfileStats error', e);
@@ -785,16 +916,28 @@ function initProfileSystem() {
         closeProfileModal();
         disconnectWallet();
     });
+    
+    // Закрытие модального окна при клике по фону
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeProfileModal();
+        }
+    });
+    
+    // Закрытие модального окна при нажатии Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            closeProfileModal();
+        }
+    });
+    
     document.getElementById('refresh-achievements-btn')?.addEventListener('click', renderAchievements);
     document.getElementById('nickname-save-btn')?.addEventListener('click', saveNickname);
+    document.getElementById('nickname-clear-btn')?.addEventListener('click', clearNickname);
     document.getElementById('nickname-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') saveNickname(); });
 
     // Load nickname if saved
-    const stored = localStorage.getItem('peak_nickname');
-    if (stored) {
-        const nameEl = document.getElementById('user-name');
-        if (nameEl) nameEl.textContent = stored;
-    }
+    loadSavedNickname();
 }
 
 function openProfileModal() {
@@ -805,7 +948,10 @@ function openProfileModal() {
     renderAchievements();
     const input = document.getElementById('nickname-input');
     if (input) {
-        input.value = document.getElementById('user-name')?.textContent || '';
+        // Загружаем сохраненный никнейм или текущий отображаемый
+        const savedNickname = localStorage.getItem('peak_nickname');
+        const currentDisplayName = document.getElementById('user-name')?.textContent || '';
+        input.value = savedNickname || currentDisplayName;
         setTimeout(()=>input.focus(), 50);
     }
 }
@@ -813,22 +959,82 @@ function openProfileModal() {
 function closeProfileModal() {
     const modal = document.getElementById('profile-modal');
     if (modal) modal.classList.remove('show');
+    
+    // Очищаем при закрытии профиля
+    cleanupAchievementTooltip();
+}
+
+function loadSavedNickname() {
+    const stored = localStorage.getItem('peak_nickname');
+    if (stored) {
+        // Применяем сохраненный никнейм ко всем элементам
+        const nameEl = document.getElementById('user-name');
+        const nameMobile = document.getElementById('user-name-mobile');
+        if (nameEl) nameEl.textContent = stored;
+        if (nameMobile) nameMobile.textContent = stored;
+        console.log(`✅ Загружен сохраненный никнейм: ${stored}`);
+    }
 }
 
 function saveNickname() {
     const input = document.getElementById('nickname-input');
     if (!input) return;
     let value = input.value.trim();
-    if (!value) return;
+    if (!value) {
+        showNotification('Введите никнейм', 'error');
+        return;
+    }
+    
+    // Проверяем длину никнейма
+    if (value.length < 2) {
+        showNotification('Никнейм должен содержать минимум 2 символа', 'error');
+        return;
+    }
+    
+    if (value.length > 20) {
+        showNotification('Никнейм должен содержать максимум 20 символов', 'error');
+        return;
+    }
+    
     // Basic sanitize
     value = value.replace(/<|>|"|'/g, '');
+    
+    // Сохраняем в localStorage
     localStorage.setItem('peak_nickname', value);
+    
+    // Применяем ко всем элементам
     const nameEl = document.getElementById('user-name');
     const nameMobile = document.getElementById('user-name-mobile');
     if (nameEl) nameEl.textContent = value;
     if (nameMobile) nameMobile.textContent = value;
+    
     showNotification('Никнейм сохранён', 'success');
     renderProfileStats();
+    
+    console.log(`✅ Никнейм сохранен: ${value}`);
+}
+
+function clearNickname() {
+    // Удаляем сохраненный никнейм
+    localStorage.removeItem('peak_nickname');
+    
+    // Перезагружаем профиль с оригинальным именем пользователя
+    if (walletState.connected && walletState.publicKey) {
+        const originalUsername = generateUsername(walletState.publicKey);
+        const nameEl = document.getElementById('user-name');
+        const nameMobile = document.getElementById('user-name-mobile');
+        if (nameEl) nameEl.textContent = originalUsername;
+        if (nameMobile) nameMobile.textContent = originalUsername;
+        
+        // Обновляем поле ввода в модальном окне, если оно открыто
+        const input = document.getElementById('nickname-input');
+        if (input) input.value = originalUsername;
+    }
+    
+    showNotification('Никнейм сброшен', 'success');
+    renderProfileStats();
+    
+    console.log(`✅ Никнейм сброшен`);
 }
 
 function renderAchievements() {
@@ -840,11 +1046,20 @@ function renderAchievements() {
     activeWrap.innerHTML = '';
     lockedWrap.innerHTML = '';
     ACHIEVEMENTS.forEach(a => {
-        const unlocked = bal >= a.req;
+        // Специальная логика для достижения "Wallet connected"
+        let unlocked;
+        if (a.id === 'mystery1') {
+            unlocked = walletState.connected; // Разблокировано если кошелек подключен
+        } else {
+            unlocked = bal >= a.req; // Обычная логика по балансу
+        }
         const el = document.createElement('div');
         el.className = `achievement-badge ${unlocked ? 'unlocked' : 'locked'}`;
-        const label = a.name;
-        const description = a.label || '';
+        
+        // Получаем название на текущем языке
+        const label = typeof a.name === 'object' 
+            ? a.name[window.currentLanguage || 'en'] || a.name.en 
+            : a.name;
         // Determine visual icon: prefer image if provided
         let iconHtml = '';
         if (a.image) {
@@ -856,12 +1071,54 @@ function renderAchievements() {
         } else {
             iconHtml = '★';
         }
-        const requirementText = unlocked ? 'Unlocked' : `Requires ${a.req.toLocaleString()} $PEAK`;
+        // Создаем подробное описание для tooltip'а
+        const description = unlocked 
+            ? `🎉 Achievement Unlocked!\n${a.name}\n\nYou have successfully earned this achievement by holding ${a.req.toLocaleString()} $PEAK tokens or more.`
+            : `🔒 Locked Achievement\n${a.name}\n\nRequirement: Hold ${a.req.toLocaleString()} $PEAK tokens\nYour balance: ${bal.toLocaleString()} $PEAK\nNeeded: ${Math.max(0, a.req - bal).toLocaleString()} more $PEAK`;
+        
         el.innerHTML = `
-            <div class="badge-icon">${iconHtml}<span class="lock">🔒</span></div>
+            <div class="badge-icon" data-achievement-id="${a.id}">
+                ${iconHtml}
+                <span class="lock">🔒</span>
+            </div>
             <div class="badge-label">${label}</div>
-            <div class="badge-tooltip">${description || requirementText}</div>
         `;
+        
+        // Добавляем простой data-атрибут для tooltip и JavaScript обработчики
+        const badgeIcon = el.querySelector('.badge-icon');
+        if (badgeIcon) {
+            badgeIcon.setAttribute('data-tooltip', description);
+            
+            // Простые обработчики для показа/скрытия тултипа
+            badgeIcon.addEventListener('mouseenter', (e) => {
+                // Специальные данные для достижения "Wallet connected"
+                let tooltipData;
+                if (a.id === 'mystery1') {
+                    tooltipData = {
+                        unlocked,
+                        name: label, // Используем переведенное название
+                        requirement: 'Connect wallet',
+                        balance: walletState.connected ? 'Connected' : 'Not connected',
+                        description: 'Successfully connect your Phantom wallet to the platform',
+                        isWalletAchievement: true
+                    };
+                } else {
+                    tooltipData = {
+                        unlocked,
+                        name: label, // Используем переведенное название
+                        requirement: a.req,
+                        balance: bal,
+                        description: a.description || 'Achievement badge for PEAK token holders'
+                    };
+                }
+                
+                showSimpleTooltip(e.target, tooltipData);
+            });
+            
+            badgeIcon.addEventListener('mouseleave', () => {
+                hideSimpleTooltip();
+            });
+        }
         (unlocked ? activeWrap : lockedWrap).appendChild(el);
     });
     if (!activeWrap.children.length) {
@@ -869,6 +1126,123 @@ function renderAchievements() {
         placeholder.className = 'text-xs text-gray-500';
         placeholder.textContent = 'No active badges yet';
         activeWrap.appendChild(placeholder);
+    }
+}
+
+// Простая функция очистки (пустая, оставляем для совместимости)
+function cleanupAchievementTooltip() {
+    // Функция оставлена пустой для совместимости с существующими вызовами
+    hideSimpleTooltip();
+}
+
+// Простые функции для тултипов
+let simpleTooltip = null;
+
+function showSimpleTooltip(element, data) {
+    hideSimpleTooltip(); // Скрываем предыдущий тултип
+    
+    simpleTooltip = document.createElement('div');
+    simpleTooltip.style.cssText = `
+        position: fixed;
+        background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(20,20,40,0.95) 100%);
+        border: 1px solid rgba(250,204,21,0.3);
+        border-radius: 12px;
+        padding: 16px;
+        min-width: 240px;
+        max-width: 300px;
+        font-size: 0.75rem;
+        color: #f8fafc;
+        z-index: 9999999;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.8), 0 0 0 1px rgba(250,204,21,0.1);
+        backdrop-filter: blur(10px);
+        pointer-events: none;
+        line-height: 1.4;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    `;
+    
+    // Создаем красивый HTML контент с переводами
+    const statusIcon = data.unlocked ? '✅' : '🔒';
+    const statusText = data.unlocked ? getTranslation('unlocked') : getTranslation('locked');
+    const statusColor = data.unlocked ? '#22c55e' : '#ef4444';
+    const borderColor = data.unlocked ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)';
+    const bgColor = data.unlocked ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+    
+    let statusMessage = '';
+    let requirementText = '';
+    let balanceText = '';
+    
+    if (data.isWalletAchievement) {
+        // Специальное сообщение для достижения кошелька
+        requirementText = `${getTranslation('requirement')}: ${getTranslation('connectWallet')}`;
+        balanceText = `${getTranslation('status')}: ${data.unlocked ? getTranslation('connected') : getTranslation('notConnected')}`;
+        statusMessage = data.unlocked 
+            ? getTranslation('walletConnected')
+            : getTranslation('connectToUnlock');
+    } else {
+        // Обычная логика для токен достижений
+        requirementText = `${getTranslation('requirement')}: ${getTranslation('hold', { amount: data.requirement.toLocaleString() })}`;
+        balanceText = `${getTranslation('balance')}: ${data.balance.toLocaleString()} $PEAK`;
+        if (data.unlocked) {
+            statusMessage = getTranslation('achievementEarned');
+        } else {
+            const needed = Math.max(0, data.requirement - data.balance);
+            statusMessage = getTranslation('needMore', { amount: needed.toLocaleString() });
+        }
+    }
+    
+    simpleTooltip.innerHTML = `
+        <div style="font-size: 0.8rem; font-weight: 600; color: #fbbf24; margin-bottom: 6px; text-align: center;">
+            ${statusIcon} ${statusText}
+        </div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: #f8fafc; margin-bottom: 8px; text-align: center;">
+            ${data.name}
+        </div>
+        <div style="font-size: 0.75rem; color: #cbd5e1; margin-bottom: 10px; text-align: center;">
+            ${requirementText}
+        </div>
+        <div style="font-size: 0.7rem; color: #9ca3af; margin-bottom: 10px; text-align: center;">
+            ${balanceText}
+        </div>
+        <div style="font-size: 0.75rem; font-weight: 600; text-align: center; padding: 6px 10px; border-radius: 6px; background: ${bgColor}; color: ${statusColor}; border: 1px solid ${borderColor};">
+            ${statusMessage}
+        </div>
+    `;
+    
+    document.body.appendChild(simpleTooltip);
+    
+    // Позиционируем тултип снизу под элементом
+    const rect = element.getBoundingClientRect();
+    const tooltipRect = simpleTooltip.getBoundingClientRect();
+    
+    // Позиционируем по центру под элементом
+    let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+    let top = rect.bottom + 10;
+    
+    // Если не помещается по ширине слева, корректируем
+    if (left < 10) left = 10;
+    if (left + tooltipRect.width > window.innerWidth - 10) {
+        left = window.innerWidth - tooltipRect.width - 10;
+    }
+    
+    // Если не помещается снизу, показываем сверху
+    if (top + tooltipRect.height > window.innerHeight - 10) {
+        top = rect.top - tooltipRect.height - 10;
+    }
+    
+    simpleTooltip.style.left = left + 'px';
+    simpleTooltip.style.top = top + 'px';
+    
+    // Показываем тултип
+    setTimeout(() => {
+        if (simpleTooltip) simpleTooltip.style.opacity = '1';
+    }, 10);
+}
+
+function hideSimpleTooltip() {
+    if (simpleTooltip) {
+        simpleTooltip.remove();
+        simpleTooltip = null;
     }
 }
 
