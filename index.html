@@ -55,6 +55,20 @@
             stroke: white !important;
             stroke-width: 2 !important;
         }
+        
+        .btn-primary [data-lucide="wallet"] {
+            color: white !important;
+            fill: none !important;
+            stroke: white !important;
+            stroke-width: 2 !important;
+        }
+        
+        .btn-primary [data-lucide="wallet"] svg {
+            color: white !important;
+            fill: none !important;
+            stroke: white !important;
+            stroke-width: 2 !important;
+        }
         [data-lucide="flag"]:empty::before { content: "🏁"; }
         [data-lucide="trending-up"]:empty::before { content: "📈"; }
         [data-lucide="mountain-snow"]:empty::before { content: "⛰️"; }
@@ -116,12 +130,12 @@
             <!-- User Profile (shown when connected) -->
             <div id="user-profile" class="hidden items-center space-x-4" style="display: none;">
                 <div class="profile-info text-right">
-                    <div class="user-name text-white font-bold" id="user-name">User</div>
+                    <div class="user-name text-white font-bold cursor-pointer hover:text-yellow-400 transition-colors" id="user-name">User</div>
                     <div class="user-tier text-sm" id="user-tier">Connecting...</div>
                     <div class="user-balance text-xs text-gray-300" id="user-balance" style="display:none;">0 $PEAK</div>
                 </div>
                 <div class="profile-avatar">
-                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-sm font-bold text-black" id="user-avatar">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-sm font-bold text-white cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200" id="user-avatar">
                         ?
                     </div>
                 </div>
@@ -160,7 +174,7 @@
                 
                 <!-- Mobile Profile (hidden initially) -->
                 <div id="user-profile-mobile" class="hidden mb-3 text-center text-white">
-                    <div id="user-name-mobile" class="font-bold">User</div>
+                    <div id="user-name-mobile" class="font-bold cursor-pointer hover:text-yellow-400 transition-colors">User</div>
                     <div id="user-tier-mobile" class="text-sm text-yellow-400">Trail Walker</div>
                     <div id="user-balance-mobile" class="text-xs text-gray-300 mt-1" style="display:none;">0 $PEAK</div>
                 </div>
@@ -175,8 +189,8 @@
 
     <main>
             <!-- Profile Modal -->
-            <div id="profile-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/70 backdrop-blur-sm">
-                <div class="bg-brand-dark-secondary w-full max-w-lg rounded-xl border border-white/10 shadow-2xl p-6 relative animate-section">
+            <div id="profile-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-md">
+                <div class="bg-brand-dark-secondary w-full max-w-lg rounded-xl border border-white/20 shadow-2xl p-6 relative animate-section" style="background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px);">
                     <button id="profile-close-btn" class="absolute top-3 right-3 text-gray-400 hover:text-white" aria-label="Close">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
@@ -190,7 +204,8 @@
                             <label for="nickname-input" class="block text-sm font-medium text-gray-300 mb-1" data-en="Nickname" data-ru="Никнейм">Nickname</label>
                             <div class="flex gap-2">
                                 <input id="nickname-input" type="text" maxlength="24" class="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-brand-yellow" placeholder="Nickname">
-                                <button id="nickname-save-btn" class="btn btn-primary px-4" data-en="Save" data-ru="Сохранить">Save</button>
+                                <button id="nickname-save-btn" class="btn btn-primary px-3" data-en="Save" data-ru="Сохранить">Save</button>
+                                <button id="nickname-clear-btn" class="btn btn-secondary px-3 text-xs" data-en="Reset" data-ru="Сброс">Reset</button>
                             </div>
                             <p class="mt-1 text-xs text-gray-400" data-en="Stored locally only" data-ru="Хранится только локально">Stored locally only</p>
                         </div>
@@ -251,7 +266,7 @@
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <a href="https://pump.fun/coin/7bAFtXqcaBagSDTE3AXvnVXFxEjiXCnwNBLqRWjNpump" target="_blank" class="btn btn-primary btn-lg group">
                             <i data-lucide="rocket" class="w-6 h-6 mr-2 group-hover:animate-bounce"></i>
-                            <span data-en="Conquer the Peak on pump.fun" data-ru="Покорить вершину на pump.fun">Conquer the Peak on pump.fun</span>
+                            <span data-en="Buy $PEAK on pump.fun" data-ru="Купить $PEAK на pump.fun">Buy $PEAK on pump.fun</span>
                         </a>
                         <a href="#about" class="btn btn-secondary btn-lg">
                             <i data-lucide="info" class="w-6 h-6 mr-2"></i>

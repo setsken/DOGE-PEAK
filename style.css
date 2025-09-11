@@ -57,19 +57,11 @@ body {
 }
 
 /* Achievements */
-.achievement-badge { width:72px; display:flex; flex-direction:column; align-items:center; gap:.35rem; font-size:.7rem; text-align:center; }
-.achievement-badge .badge-icon { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.65rem; position:relative; background:radial-gradient(circle at 50% 45%, rgba(0,0,0,0.6), rgba(0,0,0,0.2)); border:2px solid rgba(255,255,255,0.12); box-shadow:0 2px 6px rgba(0,0,0,0.4); transition: all .3s ease; }
-.achievement-badge .badge-icon .badge-img { width:46px; height:46px; object-fit:contain; border-radius:50%; filter: drop-shadow(0 0 4px rgba(0,0,0,0.6)); }
-.achievement-badge .badge-icon { overflow:hidden; }
-.achievement-badge .badge-icon .badge-img { transition:all .35s ease; }
-.achievement-badge:hover .badge-icon { transform: scale(1.2); }
-.achievement-badge:hover .badge-icon .badge-img { width:100%; height:100%; border-radius:50%; }
-
-/* Tooltip */
-.achievement-badge { position:relative; }
-.achievement-badge .badge-tooltip { pointer-events:none; position:absolute; left:50%; bottom: -4px; transform:translate(-50%, 100%) translateY(6px); background:rgba(0,0,0,0.9); color:#f8f8f8; padding:8px 12px; font-size:.65rem; line-height:1.2; white-space:nowrap; border:1px solid rgba(255,255,255,0.2); border-radius:8px; opacity:0; visibility:hidden; transition:opacity .3s ease, transform .3s ease, visibility .3s ease; z-index:30; box-shadow:0 6px 20px rgba(0,0,0,0.6); }
-.achievement-badge .badge-icon:hover ~ .badge-tooltip { opacity:1; visibility:visible; transform:translate(-50%, 100%) translateY(-4px); }
-.achievement-badge .badge-tooltip::after { content:''; position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:10px; height:10px; background:rgba(0,0,0,0.9); border-left:1px solid rgba(255,255,255,0.2); border-top:1px solid rgba(255,255,255,0.2); transform:translateX(-50%) rotate(45deg); }
+.achievement-badge { width:72px; display:flex; flex-direction:column; align-items:center; gap:.35rem; font-size:.7rem; text-align:center; position:relative; }
+.achievement-badge .badge-icon { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.65rem; position:relative; background:radial-gradient(circle at 50% 45%, rgba(0,0,0,0.6), rgba(0,0,0,0.2)); border:2px solid rgba(255,255,255,0.12); box-shadow:0 2px 6px rgba(0,0,0,0.4); transition: all .3s ease; cursor:pointer; }
+.achievement-badge .badge-icon .badge-img { width:46px; height:46px; object-fit:contain; border-radius:50%; filter: drop-shadow(0 0 4px rgba(0,0,0,0.6)); transition:all .35s ease; }
+.achievement-badge .badge-icon:hover { transform: scale(1.1); }
+.achievement-badge .badge-icon:hover .badge-img { width:50px; height:50px; }
 .achievement-badge.unlocked .badge-icon { border-color: var(--brand-yellow); box-shadow:0 0 0 3px rgba(250,204,21,0.25),0 0 12px -2px rgba(250,204,21,0.6); background:radial-gradient(circle at 50% 40%, rgba(250,204,21,0.25), rgba(0,0,0,0.4)); }
 .achievement-badge.unlocked .badge-icon::after { content:''; position:absolute; inset:-4px; border-radius:50%; background:radial-gradient(circle at 50% 50%, rgba(250,204,21,0.35), transparent 70%); filter:blur(6px); opacity:.65; }
 .achievement-badge.locked { opacity:.45; filter:grayscale(.9); }
@@ -80,9 +72,39 @@ body {
 .achievement-badge .badge-icon .lock { position:absolute; font-size:.95rem; bottom:4px; right:6px; opacity:.85; }
 .achievement-badge.unlocked .badge-icon .lock { display:none; }
 
+/* Achievement Tooltips убраны - используем JavaScript */
+
+/* Анимация появления */
+@keyframes tooltipFadeIn {
+    from { 
+        opacity: 0; 
+        transform: translate(10px, -50%); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translate(15px, -50%); 
+    }
+}
+
 /* Modal animation helper */
 #profile-modal.show { display: flex !important; animation: fadeIn .25s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Улучшенные стили для модального окна профиля */
+#profile-modal {
+    background: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+}
+
+#profile-modal > div {
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.98) 0%, rgba(26, 26, 26, 0.95) 100%) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 
+                0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
@@ -238,6 +260,13 @@ body {
     font-weight: 800;
     box-shadow: var(--glow-yellow);
     border: 2px solid var(--brand-yellow);
+}
+
+/* Белые иконки в primary кнопках */
+.btn-primary [data-lucide] {
+    color: white !important;
+    stroke: white !important;
+    fill: none !important;
 }
 
 .btn-primary:hover {
@@ -2901,6 +2930,22 @@ section {
     position: relative;
 }
 
+/* Аватар пользователя - всегда белый текст */
+#user-avatar {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+    font-weight: bold !important;
+}
+
+/* Переопределяем Tailwind классы для аватара */
+#user-avatar.text-black {
+    color: white !important;
+}
+
+#user-avatar.text-white {
+    color: white !important;
+}
+
 .profile-badge-mini {
     display: flex;
     flex-direction: column;
@@ -3294,16 +3339,25 @@ section {
 /* Profile Avatar Glow Effects */
 .profile-avatar .tier-trail-walker { 
     box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
 }
 .profile-avatar .tier-rare-guide { 
     box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
 }
 .profile-avatar .tier-epic-climber { 
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    background: linear-gradient(135deg, #a855f7, #9333ea) !important;
 }
 .profile-avatar .tier-legendary { 
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
     background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+}
+
+/* Убеждаемся, что текст всегда белый для всех тиров */
+.profile-avatar #user-avatar {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* Wallet Connection States */
@@ -3366,4 +3420,57 @@ section {
     0%, 20% { content: '.'; }
     40% { content: '..'; }
     60%, 100% { content: '...'; }
+}
+
+/* Градиентный никнейм для Legendary тира (10M+) */
+.tier-legendary {
+    background: linear-gradient(135deg, 
+        #ffd700 0%,     /* Золотой */
+        #ff6b35 25%,    /* Оранжевый */
+        #8b5cf6 50%,    /* Фиолетовый */
+        #06b6d4 75%,    /* Голубой */
+        #ffd700 100%    /* Снова золотой для плавного перехода */
+    ) !important;
+    background-size: 200% 200% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
+    text-shadow: none !important;
+    animation: gradient-shift 3s ease-in-out infinite !important;
+}
+
+/* Анимация смещения градиента */
+@keyframes gradient-shift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Желтый цвет для текста тира Legendary */
+.tier-legendary-text {
+    color: #facc15 !important; /* yellow-400 */
+    font-weight: 600 !important;
+}
+
+/* Стили для интерактивных элементов профиля */
+.user-name {
+    transition: color 0.3s ease, text-shadow 0.3s ease !important;
+}
+
+.user-name:hover {
+    text-shadow: 0 0 8px rgba(250, 204, 21, 0.6) !important;
+}
+
+#user-avatar {
+    transition: all 0.2s ease !important;
+}
+
+#user-avatar:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3) !important;
 }
